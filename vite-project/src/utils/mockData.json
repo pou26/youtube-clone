@@ -1,0 +1,74 @@
+[
+  {
+    "videoId": "video01",
+    "title": "Learn React in 30 Minutes",
+    "thumbnailUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3Qt_Lej9OIc3dB2rlAveCdZ2VnLxB32XhA&s",
+    "description": "A quick tutorial to get started with React.",
+    "channelId": "channel01",
+    "uploader": "user01",
+    "views": 15200,
+    "likes": 1023,
+    "dislikes": 45,
+    "uploadDate": "2024-09-20",
+    "comments": [
+      {
+        "commentId": "comment01",
+        "userId": "user02",
+        "text": "Great video! Very helpful.",
+        "timestamp": "2024-09-21T08:30:00Z"
+      },
+      {
+        "commentId": "comment02",
+        "userId": "user03",
+        "text": "Thanks! This was just what I needed.",
+        "timestamp": "2024-09-22T10:15:00Z"
+      }
+    ]
+  },
+  {
+    "videoId": "video02",
+    "title": "Mastering Tailwind CSS",
+    "thumbnailUrl": "https://i.pinimg.com/736x/ed/af/d3/edafd3803d5be046f9f22a5da9732086.jpg",
+    "description": "Learn how to build beautiful UIs with Tailwind CSS.",
+    "channelId": "channel02",
+    "uploader": "user02",
+    "views": 30850,
+    "likes": 2200,
+    "dislikes": 12,
+    "uploadDate": "2024-09-18",
+    "comments": [
+      {
+        "commentId": "comment03",
+        "userId": "user04",
+        "text": "Super helpful! Tailwind is awesome.",
+        "timestamp": "2024-09-19T12:45:00Z"
+      }
+    ]
+  },
+  {
+    "videoId": "video03",
+    "title": "JavaScript Async/Await Explained",
+    "thumbnailUrl": "https://marketplace.canva.com/EAE0krlP91c/1/0/1600w/canva-orange-yellow-minimalist-aesthetic-a-day-in-my-life-travel-vlog-youtube-thumbnail--kLeYvBPuio.jpg",
+    "description": "Understand JavaScript async/await with real examples.",
+    "channelId": "channel03",
+    "uploader": "user03",
+    "views": 50000,
+    "likes": 4100,
+    "dislikes": 30,
+    "uploadDate": "2024-09-15",
+    "comments": [
+      {
+        "commentId": "comment04",
+        "userId": "user05",
+        "text": "Finally, I get async/await! Thanks!",
+        "timestamp": "2024-09-16T14:20:00Z"
+      },
+      {
+        "commentId": "comment05",
+        "userId": "user06",
+        "text": "Perfect explanation. Subscribed!",
+        "timestamp": "2024-09-17T16:30:00Z"
+      }
+    ]
+  }
+]
