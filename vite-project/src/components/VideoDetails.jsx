@@ -13,7 +13,7 @@ async function fetchVideoDetails(id) {
   }
 
   const data = await response.json();
-  const video = data.items[0]; // The first item will be the video we need
+  const video = data.items[0]; // The first item will be the video
 
   return {
     title: video.snippet.title,
@@ -98,7 +98,7 @@ const VideoDetails = () => {
         <h2 className="text-lg font-semibold mb-4">Related Videos</h2>
         <Videos 
           activeFilter="All" 
-          layoutType="list"  // This will change the layout to a vertical list
+          layoutType="list"  //vertical list
         />
       </div>
     </div>

@@ -100,7 +100,7 @@ const Videos = ({
   if (loading) return <div className="loading">Loading videos...</div>;
   if (error) return <div className="error">Error loading videos: {error}</div>;
 
-  // Determine the appropriate class based on layout type
+  // appropriate class based on layout type
   const videoWrapClass = layoutType === 'grid' 
     ? 'video-wrap' 
     : 'flex flex-col space-y-4';
@@ -111,7 +111,7 @@ const Videos = ({
     <div 
       className={`content-container ${isSidebar2Open ? 'content-shifted' : 'content-normal'}`}
       style={{
-        // Inline style to provide more precise control
+        // Inline style
         marginLeft: isSidebar2Open ? '240px' : '0',
         width: isSidebar2Open ? 'calc(100% - 240px)' : '100%',
         transition: 'all 0.3s ease-in-out'
