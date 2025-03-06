@@ -1,4 +1,3 @@
-// Navbar.jsx - Enhanced YouTube style
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
@@ -11,9 +10,9 @@ const Navbar = ({ isSidebar2Open, toggleSidebar }) => {
       <div className="navbar-left">
         {/* Hamburger Menu (Triggers Sidebar2) */}
         <div className="hamburger" onClick={toggleSidebar}>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
+          <div className={`bar ${isSidebar2Open ? "open" : ""}`}></div>
+          <div className={`bar ${isSidebar2Open ? "open" : ""}`}></div>
+          <div className={`bar ${isSidebar2Open ? "open" : ""}`}></div>
         </div>
         
         {/* Logo */}
@@ -27,8 +26,7 @@ const Navbar = ({ isSidebar2Open, toggleSidebar }) => {
       </div>
       
       {/* Middle section - Search */}
-
-      <Search/>
+      <Search />
       
       {/* Right section */}
       <div className="navbar-right">

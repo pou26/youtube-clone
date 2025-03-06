@@ -97,9 +97,10 @@ const VideoDetails = () => {
       <div className="md:w-1/3 lg:w-1/4 overflow-y-auto max-h-[90vh]">
         <h2 className="text-lg font-semibold mb-4">Related Videos</h2>
         <Videos 
-          activeFilter="All" 
-          layoutType="list"  //vertical list
-        />
+  activeFilter="All" 
+  layoutType="list"
+  context="related"  // This disables hover preview
+/>
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-// App.jsx
-
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import SideBar from "./components/SideBar";
@@ -13,13 +11,20 @@ const App = () => {
   const toggleSidebar = () => setIsSidebar2Open((prev) => !prev);
 
   return (
-    <>
+    <div className="app-container">
       <Navbar toggleSidebar={toggleSidebar} />
-      <SideBar isSidebar2Open={isSidebar2Open} toggleSidebar={toggleSidebar} />
-      <div className="content">
+      <SideBar 
+        isSidebar2Open={isSidebar2Open} 
+        toggleSidebar={toggleSidebar} 
+      />
+      <div 
+        className={`content-wrapper transition-all duration-300 ease-in-out ${
+          isSidebar2Open ? 'ml-[312px]' : 'ml-[72px]'
+        }`}
+      >
         <Outlet />
       </div>
-    </>
+    </div>
   );
 };
 
