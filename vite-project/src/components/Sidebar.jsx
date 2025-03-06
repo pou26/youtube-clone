@@ -1,23 +1,24 @@
 import React from "react";
-import "./Navbar.css";
+import "./Sidebar.css"
 
-const SideBar = ({ isSidebar2Open }) => {
+const SideBar = ({ isSidebar2Open, isVideoDetailsPage }) => {
   return (
     <div>
-      {/* First Sidebar (Always Visible) - Mini sidebar */}
+      {/* First Sidebar (Always Visible)*/}
       <div className="sidebar">
-    <ul>
-        <li><span className="icon">🏠</span> <span className="text">Home</span></li>
-        <li><span className="icon">🎬</span> <span className="text">Shorts</span></li>
-        <li><span className="icon">📺</span> <span className="text">Subs</span></li>
-        <li><span className="icon">📚</span> <span className="text">You</span></li>
-        <li><span className="icon">⬇️</span> <span className="text">Downloads</span></li>
-    </ul>
-    </div>
-
+        <ul>
+            <li><span className="icon">🏠</span> <span className="text">Home</span></li>
+            <li><span className="icon">🎬</span> <span className="text">Shorts</span></li>
+            <li><span className="icon">📺</span> <span className="text">Subs</span></li>
+            <li><span className="icon">📚</span> <span className="text">You</span></li>
+            <li><span className="icon">⬇️</span> <span className="text">Downloads</span></li>
+        </ul>
+      </div>
       
-      {/* Second Sidebar (Toggles Open/Close) - Main sidebar */}
-      <div className={`sidebar2 ${isSidebar2Open ? "active" : ""}`}>
+      {/* Second Sidebar (Toggles)*/}
+      <div className={`sidebar2 ${isSidebar2Open ? "active" : ""} ${
+        isVideoDetailsPage ? "overlay-sidebar" : ""
+      }`}>
         <div className="section">
           <ul>
             <li>🏠 Home</li>
@@ -90,7 +91,7 @@ const SideBar = ({ isSidebar2Open }) => {
           <div style={{ marginBottom: "16px" }}>
             Terms Privacy Policy & Safety How YouTube works Test new features
           </div>
-          <div>© 2025 Google LLC</div>
+          <div>©️ 2025 Google LLC</div>
         </div>
       </div>
     </div>

@@ -1,313 +1,221 @@
 [
   {
-    "videoId": "video01",
-    "title": "Learn React in 30 Minutes",
-    "thumbnailUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3Qt_Lej9OIc3dB2rlAveCdZ2VnLxB32XhA&s",
-    "description": "A quick tutorial to get started with React.",
-    "channelId": "channel01",
-    "uploader": "user01",
-    "views": 15200,
-    "likes": 1023,
-    "dislikes": 45,
-    "uploadDate": "2024-09-20",
+    
+    "videoId": "v1",
+    "title": "Build a Complete React Application from Scratch",
+    "thumbnailUrl": "https://i.ytimg.com/vi/w7ejDZ8SWv8/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/w7ejDZ8SWv8",
+    "description": "In this crash course, we will build a complete React application that uses the Context API, hooks, and more. By the end, you'll understand how to build modern React applications.",
+    "channelId": "TraversyMedia",
+    "uploader": "user1",
+    "views": 128000,
+    "likes": 8700,
+    "dislikes": 120,
+    "uploadDate": "2023-03-15",
     "comments": [
       {
-        "commentId": "comment01",
-        "userId": "user02",
-        "text": "Great video! Very helpful.",
-        "timestamp": "2024-09-21T08:30:00Z"
-      },
-      {
-        "commentId": "comment02",
-        "userId": "user03",
-        "text": "Thanks! This was just what I needed.",
-        "timestamp": "2024-09-22T10:15:00Z"
+        "commentId": "c1",
+        "userId": "user5",
+        "text": "This tutorial helped me get started with React. Thank you!",
+        "timestamp": "2023-03-16T14:22:00Z"
       }
     ]
   },
   {
-    "videoId": "video02",
-    "title": "Mastering Tailwind CSS",
-    "thumbnailUrl": "https://i.pinimg.com/736x/ed/af/d3/edafd3803d5be046f9f22a5da9732086.jpg",
-    "description": "Learn how to build beautiful UIs with Tailwind CSS.",
-    "channelId": "channel02",
-    "uploader": "user02",
-    "views": 30850,
-    "likes": 2200,
-    "dislikes": 12,
-    "uploadDate": "2024-09-18",
+    
+    "videoId": "v2",
+    "title": "JavaScript ES6 Tutorial: Learn Modern JavaScript",
+    "thumbnailUrl": "https://i.ytimg.com/vi/nZ1DMMsyVyI/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/nZ1DMMsyVyI",
+    "description": "This JavaScript ES6 tutorial covers all the new features in modern JavaScript. Learn about arrow functions, template literals, destructuring, and more.",
+    "channelId": "DevEd",
+    "uploader": "user2",
+    "views": 94500,
+    "likes": 6200,
+    "dislikes": 85,
+    "uploadDate": "2023-04-12",
     "comments": [
       {
-        "commentId": "comment03",
-        "userId": "user04",
-        "text": "Super helpful! Tailwind is awesome.",
-        "timestamp": "2024-09-19T12:45:00Z"
+        "commentId": "c2",
+        "userId": "user7",
+        "text": "ES6 features have made my code so much cleaner!",
+        "timestamp": "2023-04-13T09:45:00Z"
       }
     ]
   },
   {
-    "videoId": "video03",
-    "title": "JavaScript Async/Await Explained",
-    "thumbnailUrl": "https://marketplace.canva.com/EAE0krlP91c/1/0/1600w/canva-orange-yellow-minimalist-aesthetic-a-day-in-my-life-travel-vlog-youtube-thumbnail--kLeYvBPuio.jpg",
-    "description": "Understand JavaScript async/await with real examples.",
-    "channelId": "channel03",
-    "uploader": "user03",
-    "views": 50000,
-    "likes": 4100,
-    "dislikes": 30,
-    "uploadDate": "2024-09-15",
+   
+    "videoId": "v3",
+    "title": "MongoDB Complete Tutorial for Beginners",
+    "thumbnailUrl": "https://i.ytimg.com/vi/ExcRbA7fy_A/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/ExcRbA7fy_A",
+    "description": "Learn MongoDB from scratch in this complete tutorial. We'll cover installation, CRUD operations, aggregation, indexing, and how to use MongoDB with Node.js.",
+    "channelId": "CodeWithMosh",
+    "uploader": "user3",
+    "views": 76000,
+    "likes": 5100,
+    "dislikes": 65,
+    "uploadDate": "2023-05-23",
     "comments": [
       {
-        "commentId": "comment04",
-        "userId": "user05",
-        "text": "Finally, I get async/await! Thanks!",
-        "timestamp": "2024-09-16T14:20:00Z"
-      },
-      {
-        "commentId": "comment05",
-        "userId": "user06",
-        "text": "Perfect explanation. Subscribed!",
-        "timestamp": "2024-09-17T16:30:00Z"
+        "commentId": "c3",
+        "userId": "user9",
+        "text": "Finally understand how to use MongoDB with my Express apps!",
+        "timestamp": "2023-05-24T11:33:00Z"
       }
     ]
   },
   {
-    "videoId": "video04",
-    "title": "Understanding React Hooks",
-    "thumbnailUrl": "https://i.pinimg.com/originals/92/22/68/922268679bdca8c9f8b4e460169153c1.jpg",
-    "description": "A beginner's guide to using React Hooks.",
-    "channelId": "channel04",
-    "uploader": "user07",
-    "views": 14200,
-    "likes": 1123,
-    "dislikes": 15,
-    "uploadDate": "2024-09-14",
+   
+    "videoId": "v4",
+    "title": "Node.js Crash Course for Beginners",
+    "thumbnailUrl": "https://i.ytimg.com/vi/fBNz5xF-Kx4/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/fBNz5xF-Kx4",
+    "description": "This Node.js crash course will teach you the fundamentals of Node, Express, and building REST APIs. Perfect for beginners who want to learn backend development.",
+    "channelId": "TraversyMedia",
+    "uploader": "user1",
+    "views": 112000,
+    "likes": 7600,
+    "dislikes": 98,
+    "uploadDate": "2023-06-10",
     "comments": [
       {
-        "commentId": "comment06",
-        "userId": "user08",
-        "text": "Thanks! This really helped with my understanding of hooks.",
-        "timestamp": "2024-09-15T10:00:00Z"
+        "commentId": "c4",
+        "userId": "user11",
+        "text": "This made Node.js so much easier to understand!",
+        "timestamp": "2023-06-11T16:28:00Z"
       }
     ]
   },
   {
-    "videoId": "video05",
-    "title": "CSS Grid vs Flexbox",
-    "thumbnailUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTezxF3Jjj_E0XFi7oRY_rX8knjVs-2pI-0nA&s",
-    "description": "Learn when to use CSS Grid and when to use Flexbox.",
-    "channelId": "channel05",
-    "uploader": "user09",
-    "views": 25000,
-    "likes": 1500,
-    "dislikes": 28,
-    "uploadDate": "2024-09-10",
+    
+    "videoId": "v5",
+    "title": "CSS Grid and Flexbox Tutorial",
+    "thumbnailUrl": "https://i.ytimg.com/vi/JJSoEo8JSnc/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/JJSoEo8JSnc",
+    "description": "Master modern CSS layout techniques with this comprehensive tutorial on CSS Grid and Flexbox. Learn how to create responsive layouts with ease.",
+    "channelId": "WebDevSimplified",
+    "uploader": "user4",
+    "views": 68500,
+    "likes": 4800,
+    "dislikes": 32,
+    "uploadDate": "2023-07-05",
     "comments": [
       {
-        "commentId": "comment07",
-        "userId": "user10",
-        "text": "This video helped me make the right decision on which to use.",
-        "timestamp": "2024-09-11T09:30:00Z"
+        "commentId": "c5",
+        "userId": "user15",
+        "text": "Finally understand the difference between Grid and Flexbox!",
+        "timestamp": "2023-07-06T08:15:00Z"
       }
     ]
   },
   {
-    "videoId": "video06",
-    "title": "Node.js for Beginners",
-    "thumbnailUrl": "https://i.ytimg.com/vi/7Htv_vtPbck/maxresdefault.jpg",
-    "description": "Understand the basics of Node.js with examples.",
-    "channelId": "channel06",
-    "uploader": "user11",
-    "views": 18900,
-    "likes": 1800,
-    "dislikes": 23,
-    "uploadDate": "2024-09-05",
+    
+    "videoId": "v6",
+    "title": "Git and GitHub Tutorial for Beginners",
+    "thumbnailUrl": "https://i.ytimg.com/vi/RGOj5yH7evk/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/RGOj5yH7evk",
+    "description": "Learn the basics of Git and GitHub in this beginner-friendly tutorial. Master version control, branches, pull requests, and collaboration.",
+    "channelId": "FreeCodeCamp",
+    "uploader": "user5",
+    "views": 89700,
+    "likes": 6100,
+    "dislikes": 78,
+    "uploadDate": "2023-08-18",
     "comments": [
       {
-        "commentId": "comment08",
-        "userId": "user12",
-        "text": "Node.js is so powerful! Great explanation.",
-        "timestamp": "2024-09-06T15:45:00Z"
-      }
-    ]
-  },
-  {
-    "videoId": "video07",
-    "title": "Exploring MongoDB",
-    "thumbnailUrl": "https://i.pinimg.com/736x/1c/d7/fd/1cd7fd3ccac863bde34a400ae1f41b45.jpg",
-    "description": "Learn how to set up and use MongoDB.",
-    "channelId": "channel07",
-    "uploader": "user13",
-    "views": 23400,
-    "likes": 1600,
-    "dislikes": 10,
-    "uploadDate": "2024-09-02",
-    "comments": [
-      {
-        "commentId": "comment09",
-        "userId": "user14",
-        "text": "MongoDB is awesome! Great video.",
-        "timestamp": "2024-09-03T12:00:00Z"
-      }
-    ]
-  },
-  {
-    "videoId": "video08",
-    "title": "Intro to TypeScript",
-    "thumbnailUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6PB5xKpgt_jkYfZ07x35tDWT7y21Pp4slGg&s",
-    "description": "Learn the basics of TypeScript and how to get started.",
-    "channelId": "channel08",
-    "uploader": "user15",
-    "views": 27800,
-    "likes": 1900,
-    "dislikes": 20,
-    "uploadDate": "2024-08-30",
-    "comments": [
-      {
-        "commentId": "comment10",
-        "userId": "user16",
-        "text": "TypeScript is a game-changer! Thanks for the tutorial.",
-        "timestamp": "2024-08-31T08:00:00Z"
-      }
-    ]
-  },
-  {
-    "videoId": "video09",
-    "title": "GraphQL vs REST APIs",
-    "thumbnailUrl": "https://i.ytimg.com/vi/L66ccGlP7Vw/maxresdefault.jpg",
-    "description": "Understand the differences between GraphQL and REST APIs.",
-    "channelId": "channel09",
-    "uploader": "user17",
-    "views": 31000,
-    "likes": 2100,
-    "dislikes": 13,
-    "uploadDate": "2024-08-25",
-    "comments": [
-      {
-        "commentId": "comment11",
+        "commentId": "c6",
         "userId": "user18",
-        "text": "Great comparison! GraphQL seems much cleaner.",
-        "timestamp": "2024-08-26T17:00:00Z"
+        "text": "This tutorial saved my project! Thank you for explaining Git so clearly.",
+        "timestamp": "2023-08-19T12:40:00Z"
       }
     ]
   },
   {
-    "videoId": "video10",
-    "title": "Introduction to Python",
-    "thumbnailUrl": "https://www.pythontutorial.net/wp-content/uploads/2020/01/python-logo.png",
-    "description": "An introductory video to Python programming language.",
-    "channelId": "channel10",
-    "uploader": "user19",
-    "views": 42000,
-    "likes": 3300,
-    "dislikes": 18,
-    "uploadDate": "2024-08-22",
+   
+    "videoId": "v7",
+    "title": "TypeScript Tutorial for JavaScript Developers",
+    "thumbnailUrl": "https://i.ytimg.com/vi/BwuLxPH8IDs/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/BwuLxPH8IDs",
+    "description": "Take your JavaScript skills to the next level with TypeScript. This tutorial covers types, interfaces, classes, and how to set up a TypeScript project.",
+    "channelId": "Academind",
+    "uploader": "user6",
+    "views": 65300,
+    "likes": 4500,
+    "dislikes": 42,
+    "uploadDate": "2023-09-22",
     "comments": [
       {
-        "commentId": "comment12",
-        "userId": "user20",
-        "text": "Python is so versatile! Thanks for the intro.",
-        "timestamp": "2024-08-23T14:30:00Z"
+        "commentId": "c7",
+        "userId": "user21",
+        "text": "Now I understand why everyone is switching to TypeScript!",
+        "timestamp": "2023-09-23T15:10:00Z"
       }
     ]
   },
   {
-    "videoId": "video11",
-    "title": "Vue.js Crash Course",
-    "thumbnailUrl": "https://www.vuemastery.com/wp-content/uploads/2018/06/8.0.jpg",
-    "description": "Learn Vue.js in a simple and easy-to-understand way.",
-    "channelId": "channel11",
-    "uploader": "user21",
-    "views": 15500,
-    "likes": 1200,
-    "dislikes": 25,
-    "uploadDate": "2024-08-15",
+    
+    "videoId": "v8",
+    "title": "Full Stack MERN Application Tutorial",
+    "thumbnailUrl": "https://i.ytimg.com/vi/7CqJlxBYj-M/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/7CqJlxBYj-M",
+    "description": "Build a complete full-stack application using MongoDB, Express, React, and Node.js. This project-based tutorial covers authentication, CRUD operations, and deployment.",
+    "channelId": "TraversyMedia",
+    "uploader": "user1",
+    "views": 103500,
+    "likes": 7200,
+    "dislikes": 87,
+    "uploadDate": "2023-10-14",
     "comments": [
       {
-        "commentId": "comment13",
-        "userId": "user22",
-        "text": "Vue.js is awesome! Thanks for the crash course.",
-        "timestamp": "2024-08-16T10:00:00Z"
+        "commentId": "c8",
+        "userId": "user25",
+        "text": "Built my first full-stack app thanks to this tutorial!",
+        "timestamp": "2023-10-15T10:05:00Z"
       }
     ]
   },
   {
-    "videoId": "video12",
-    "title": "Django Basics",
-    "thumbnailUrl": "https://images.unsplash.com/photo-1582565225687-f2061f827013",
-    "description": "Learn Django fundamentals for web development.",
-    "channelId": "channel12",
-    "uploader": "user23",
-    "views": 19800,
-    "likes": 1500,
-    "dislikes": 30,
-    "uploadDate": "2024-08-10",
+    
+    "videoId": "v9",
+    "title": "Tailwind CSS Crash Course",
+    "thumbnailUrl": "https://i.ytimg.com/vi/dFgzHOX84xQ/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/dFgzHOX84xQ",
+    "description": "Learn Tailwind CSS in this crash course. This tutorial covers installation, configuration, responsive design, and how to build modern UIs with Tailwind.",
+    "channelId": "WebDevSimplified",
+    "uploader": "user4",
+    "views": 71200,
+    "likes": 5100,
+    "dislikes": 38,
+    "uploadDate": "2023-11-05",
     "comments": [
       {
-        "commentId": "comment14",
-        "userId": "user24",
-        "text": "Django is so powerful! Great video.",
-        "timestamp": "2024-08-11T13:30:00Z"
-      }
-    ]
-  },
-  {
-    "videoId": "video13",
-    "title": "Learning SQL Queries",
-    "thumbnailUrl": "https://i.ytimg.com/vi/NxeXyi8wvls/maxresdefault.jpg",
-    "description": "Learn SQL queries for managing databases.",
-    "channelId": "channel13",
-    "uploader": "user25",
-    "views": 56000,
-    "likes": 4200,
-    "dislikes": 10,
-    "uploadDate": "2024-08-05",
-    "comments": [
-      {
-        "commentId": "comment15",
-        "userId": "user26",
-        "text": "SQL is super useful! Thanks for the great tips.",
-        "timestamp": "2024-08-06T11:00:00Z"
-      }
-    ]
-  },
-  {
-    "videoId": "video14",
-    "title": "Building RESTful APIs with Express",
-    "thumbnailUrl": "https://i.ytimg.com/vi/gnGz5p-PyRU/maxresdefault.jpg",
-    "description": "A guide to building REST APIs using Express.js.",
-    "channelId": "channel14",
-    "uploader": "user27",
-    "views": 23000,
-    "likes": 1800,
-    "dislikes": 15,
-    "uploadDate": "2024-08-01",
-    "comments": [
-      {
-        "commentId": "comment16",
+        "commentId": "c9",
         "userId": "user28",
-        "text": "Express.js makes building APIs so easy! Great tutorial.",
-        "timestamp": "2024-08-02T14:15:00Z"
+        "text": "Tailwind has completely changed how I approach CSS!",
+        "timestamp": "2023-11-06T14:20:00Z"
       }
     ]
   },
   {
-    "videoId": "video15",
-    "title": "Mastering Git and GitHub",
-    "thumbnailUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-xzld5wh8iBPYfGk6-YGZq4VZ7TSPzK1j1w&s",
-    "description": "A complete guide to Git and GitHub for beginners.",
-    "channelId": "channel15",
-    "uploader": "user29",
-    "views": 40000,
-    "likes": 2900,
-    "dislikes": 18,
-    "uploadDate": "2024-07-28",
+    
+    "videoId": "v10",
+    "title": "Docker and Kubernetes for Beginners",
+    "thumbnailUrl": "https://i.ytimg.com/vi/Wf2eSG3owoA/maxresdefault.jpg",
+    "videoUrl": "https://www.youtube.com/embed/Wf2eSG3owoA",
+    "description": "Get started with containers and orchestration. This tutorial covers Docker basics, containerizing applications, Kubernetes fundamentals, and deploying to production.",
+    "channelId": "TechWorldWithNana",
+    "uploader": "user7",
+    "views": 96800,
+    "likes": 6700,
+    "dislikes": 52,
+    "uploadDate": "2023-12-12",
     "comments": [
       {
-        "commentId": "comment17",
-        "userId": "user30",
-        "text": "Git and GitHub are essential skills! Thanks for the tutorial.",
-        "timestamp": "2024-07-29T13:00:00Z"
+        "commentId": "c10",
+        "userId": "user31",
+        "text": "Finally understand containers after watching this!",
+        "timestamp": "2023-12-13T13:15:00Z"
       }
     ]
   }

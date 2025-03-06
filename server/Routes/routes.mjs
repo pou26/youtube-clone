@@ -15,7 +15,7 @@ export function routes(app) {
     // Videos
 
     app.get("/videos", getVideo);
-    app.get("/videos/:videoId", getVideoById);
+    app.get("/video/:videoId", getVideoById);
 
     // //cart
 

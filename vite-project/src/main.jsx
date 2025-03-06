@@ -25,7 +25,7 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "/video/:id",
+        path: "/video/:videoId",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <VideoDetails />

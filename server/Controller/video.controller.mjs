@@ -19,7 +19,7 @@ export async function getVideoById(req,res,next){
     try{
         const { videoId } = req.params;
 
-        const video= await Video.findById(videoId);
+        const video = await Video.findById(videoId);
 
     //     if (!isValidObjectId(productId)) {
     //       return res.status(400).json({ msg: "Invalid product ID" });

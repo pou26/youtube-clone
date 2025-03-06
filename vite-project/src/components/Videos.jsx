@@ -1,12 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
+import axios from "axios";
+
+// Create axios instance
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:4000',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
 const Videos = ({
-  isSidebar2Open = false,
   activeFilter = "All",
   layoutType = "grid",
   context = "homepage" // context prop for applying different styles,homepage and videodetails page
 }) => {
+  // Get sidebar state from outlet context
+  const { isSidebar2Open, isVideoDetailsPage } = useOutletContext() || { isSidebar2Open: false, isVideoDetailsPage: false };
+  
   const [videos, setVideos] = useState([]);
   const [filteredVideos, setFilteredVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,24 +29,18 @@ const Videos = ({
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const API_KEY = "AIzaSyBlADRamt1PCTDO6dV1pm4YupQPoiU3caE";
-        const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=IN&maxResults=20&key=${API_KEY}`
-        );
+        const response = await axiosInstance.get("/videos");
+        const data = response.data;
+        console.log(data);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch videos");
-        }
-
-        const data = await response.json();
-
-        const formattedVideos = data.items.map(item => ({
-          videoId: item.id,
-          title: item.snippet.title,
-          thumbnailUrl: item.snippet.thumbnails.maxres?.url || item.snippet.thumbnails.high.url,
-          channelTitle: item.snippet.channelTitle,
-          views: parseInt(item.statistics.viewCount).toLocaleString(),
-          publishedAt: formatPublishedDate(item.snippet.publishedAt),
+        const formattedVideos = data.map(item => ({
+          videoId: item._id, // Database ID
+          ytVideoId: extractYoutubeId(item.videoUrl), // Extract YouTube ID
+          title: item.title,
+          thumbnailUrl: item.thumbnailUrl,
+          channelTitle: item.channelId,
+          views: item.views,
+          publishedAt: formatPublishedDate(item.uploadDate),
           category: getRandomCategory()
         }));
 
@@ -42,7 +48,7 @@ const Videos = ({
         setFilteredVideos(formattedVideos);
       } catch (err) {
         console.error("Error fetching videos:", err);
-        setError(err.message);
+        setError(err.response?.data?.message || err.message);
       } finally {
         setLoading(false);
       }
@@ -50,6 +56,21 @@ const Videos = ({
 
     fetchVideos();
   }, []);
+
+  // Function to extract YouTube video ID from URL
+  const extractYoutubeId = (url) => {
+    if (!url) return "";
+    
+    // Handle both embed URLs and watch URLs
+    if (url.includes('/embed/')) {
+      return url.split('/embed/')[1].split('?')[0];
+    } else if (url.includes('watch?v=')) {
+      return url.split('watch?v=')[1].split('&')[0];
+    }
+    
+    // If no pattern matches, return the original value
+    return url;
+  };
 
   useEffect(() => {
     if (activeFilter === "All") {
@@ -89,8 +110,7 @@ const Videos = ({
     if (context === 'homepage') {
       if (timeoutRef.current) clearTimeout(timeoutRef.current); //clearTimeout for avoiding unnecessary stacking up video queue
 
-      // video plays after a delay of 800MediaSession,for better ui experience and avoid flickering
-
+      // video plays after a delay of 800Ms,for better ui experience and avoid flickering
       timeoutRef.current = setTimeout(() => {   //timeoutRef.current is used to store and manage the timeout ID returned by the setTimeout() function
         setHoveredVideo(videoId);
       }, 800);
@@ -108,101 +128,97 @@ const Videos = ({
   const videoWrapClass = layoutType === 'grid'
     ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'
     : 'flex flex-col space-y-4';
+  
+  // Only apply sidebar shift on homepage, not on video details page
+  const sidebarAdjustment = (context === 'homepage' && isSidebar2Open) ? 'mr-[0px]' : 'ml-[5px]';
 
   return (
     <div className={`p-4 transition-all duration-300 ease-in-out ${
-      isSidebar2Open ? 'mr-[0px]' : 'ml-[5px]'
+      context === 'homepage' ? sidebarAdjustment : ''
     }`}>
       <div className="wrapper">
         <h1 className="text-xl font-semibold mb-6">
           {activeFilter === "All" ? "Recommended" : activeFilter}
         </h1>
         <div 
-  className={`${videoWrapClass} 
-    ${context === 'related' ? 'overflow-y-scroll scrollbar-hide max-h-[500px]' : ''}`}
->
-  {filteredVideos.length > 0 ? (
-    filteredVideos.map((video) => (
-      <div
-        key={video.videoId}
-        //context-specific styles for related videos
-        className={`video relative 
-          ${layoutType === 'list' ? 'flex items-start space-x-4' : ''} 
-          ${context === 'related' ? 'flex items-start space-x-2 mb-2' : ''}`}
-        onMouseEnter={() => handleMouseEnter(video.videoId)}
-        onMouseLeave={handleMouseLeave}
-      >
-  <div 
-          // different width for related videos context
-          className={`thumbnail-container relative 
-            ${layoutType === 'list' ? 'w-1/3' : 'w-full'} 
-            ${context === 'related' ? 'w-[160px] shrink-0' : ''}`}
-          style={{ 
-            position: 'relative', 
-            //Adjusted aspect ratio for related videos in videodetails page side video list
-
-            paddingTop: context === 'related' ? '34%' : '56.25%' 
-          }}
+          className={`${videoWrapClass} 
+            ${context === 'related' ? 'overflow-y-scroll scrollbar-hide max-h-[500px]' : ''}`}
         >
-          {context === 'homepage' && hoveredVideo === video.videoId ? (
-            <div 
-              className="absolute inset-0 video-preview"
-              style={{ 
-                position: 'absolute', 
-                top: 0, 
-                left: 0, 
-                width: '100%', 
-                height: '100%' 
-              }}
-            >
-              <iframe
-                className="absolute inset-0 w-full h-full object-cover rounded-lg"
-                src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=${video.videoId}`}
-                title={video.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+          {filteredVideos.length > 0 ? (
+            filteredVideos.map((video) => (
+              <div
+                key={video.videoId}
+                className={`video relative 
+                  ${layoutType === 'list' ? 'flex items-start space-x-4' : ''} 
+                  ${context === 'related' ? 'flex items-start space-x-2 mb-6 ' : ''}`}
+                onMouseEnter={() => handleMouseEnter(video.videoId)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div 
+                  className={`thumbnail-container relative 
+                    ${layoutType === 'list' ? 'w-1/3' : 'w-full'} 
+                    ${context === 'related' ? 'w-[170px]' : ''}`}
+                  style={{ 
+                    position: 'relative', 
+                    paddingTop: context === 'related' ? '26%' : '56.25%' 
+                  }}
+                >
+                  {context === 'homepage' && hoveredVideo === video.videoId ? (
+                    <div 
+                      className="absolute inset-0 video-preview"
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100%', 
+                        height: '100%' 
+                      }}
+                    >
+                      <iframe
+                        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                        src={`https://www.youtube.com/embed/${video.ytVideoId}?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=${video.ytVideoId}`}
+                        title={video.title}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  ) : (
+                    <Link to={`/video/${video.videoId}`} className="absolute inset-0">
+                      <img
+                        src={video.thumbnailUrl}
+                        alt={video.title}
+                        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                      />
+                    </Link>
+                  )}
+                </div>
+                <div className={`video-info 
+                  ${layoutType === 'list' ? 'w-2/3' : ''} 
+                  ${context === 'related' ? 'flex-1 overflow-hidden h-25' : ''}`}
+                >
+                  <h2 className={`font-medium line-clamp-2 
+                    ${context === 'related' ? 'text-[15px] leading-tight' : 'text-sm mt-2'}`}>
+                    {video.title}
+                  </h2>
+                  <p className={`text-gray-400 
+                    ${context === 'related' ? 'text-[12px] leading-tight mt-0.5' : 'text-s mt-1'}`}>
+                    {video.channelTitle}
+                  </p>
+                  <p className={`text-gray-400 
+                    ${context === 'related' ? 'text-[10px] leading-tight mt-0.5' : 'text-s mt-1'}`}>
+                    {video.views} views • {video.publishedAt}
+                  </p>
+                  {context !== 'related' && (
+                    <p className="text-xs text-gray-400 mt-1">{video.category}</p>
+                  )}
+                </div>
+              </div>
+            ))
           ) : (
-            <Link to={`/video/${video.videoId}`} className="absolute inset-0">
-              <img
-                src={video.thumbnailUrl}
-                alt={video.title}
-                className="absolute inset-0 w-full h-full object-cover rounded-lg"
-              />
-            </Link>
+            <div className="no-videos">No videos found for this category</div>
           )}
         </div>
-        {/*context-specific styling for video info */}
-        {/* context=related is for video details page video list */}
-        <div className={`video-info 
-  ${layoutType === 'list' ? 'w-2/3' : ''} 
-  ${context === 'related' ? 'flex-1 overflow-hidden h-25' : ''}`}
->
-  <h2 className={`font-medium line-clamp-2 
-    ${context === 'related' ? 'text-[10px] leading-tight' : 'text-sm mt-2'}`}>
-    {video.title}
-  </h2>
-  <p className={`text-gray-400 
-    ${context === 'related' ? 'text-[9px] leading-tight mt-0.5' : 'text-xs mt-1'}`}>
-    {video.channelTitle}
-  </p>
-  <p className={`text-gray-400 
-    ${context === 'related' ? 'text-[9px] leading-tight mt-0.5' : 'text-xs mt-1'}`}>
-    {video.views} views • {video.publishedAt}
-  </p>
-  {/* Only show category on homepage or list view */}
-  {context !== 'related' && (
-    <p className="text-xs text-gray-400 mt-1">{video.category}</p>
-  )}
-</div>
-      </div>
-    ))
-  ) : (
-    <div className="no-videos">No videos found for this category</div>
-  )}
-</div>
       </div>
     </div>
   );
