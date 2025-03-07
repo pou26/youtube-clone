@@ -1,40 +1,40 @@
 .sidebar {
-    position: fixed;
-    top: 56px; 
-    left: 0;
-    width: 72px;
-    height: calc(100vh - 56px);
-    background-color: #111;
-    z-index: 10;
-    overflow-y: auto;
-    transition: all 0.3s;
-  }
-  
-  .sidebar2 {
-    position: fixed;
-    top: 56px;
-    left: -240px; /* Start offscreen */
-    width: 240px;
-    height: calc(100vh - 56px);
-    background-color: #111;
-    z-index: 5;
-    overflow-y: auto;
-    transition: all 0.3s;
-  }
-  
-  .sidebar2.active {
-    left: 72px; 
-  }
-  
-  /* Overlay sidebar style for video details page */
-  .overlay-sidebar.active {
-    left: 72px;
-    z-index: 20; 
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
-  }
-  
-  /*for homepage and other pages */
-  .content-wrapper {
-    padding-left: 72px; 
-    transition: all 0.3s ease-in-out;
-  }
+  position: fixed;
+  top: 56px; 
+  left: 0;
+  width: 72px;
+  height: calc(100vh - 56px);
+  background-color: #111;
+  z-index: 10;
+  overflow-y: auto;
+  transition: all 0.3s;
+}
+
+.sidebar2 {
+  position: fixed;
+  top: 56px;
+  left: -240px; /* Start offscreen */
+  width: 240px;
+  height: calc(100vh - 56px);
+  background-color: #111;
+  z-index: 15; /* Higher z-index than the first sidebar */
+  overflow-y: auto;
+  transition: all 0.3s;
+}
+
+.sidebar2.active {
+  left: 0; /* Position at left edge of screen when active */
+}
+
+/* Overlay sidebar style for video details page */
+.overlay-sidebar.active {
+  left: 0; /* Also position at left edge when active */
+  z-index: 20; 
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+}
+
+/* For homepage and other pages */
+.content-wrapper {
+  padding-left: 72px; 
+  transition: all 0.3s ease-in-out;
+}

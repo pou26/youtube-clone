@@ -24,7 +24,7 @@ const App = () => {
       />
       <div 
         className={`content-wrapper transition-all duration-300 ease-in-out ${
-          isSidebar2Open && !isVideoDetailsPage ? 'ml-[240px]' : 'ml-[72px]'
+          isSidebar2Open && !isVideoDetailsPage ? 'ml-[180px]' : 'ml-[0px] mt-[70px]'
         }`}
       >
         <Outlet context={{ isSidebar2Open, isVideoDetailsPage }} />

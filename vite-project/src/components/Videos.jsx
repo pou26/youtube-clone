@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
+import CategoryFilter from "./CategoryFilter"; // Import the new component
 
 // Create axios instance
 const axiosInstance = axios.create({
@@ -12,7 +13,6 @@ const axiosInstance = axios.create({
 });
 
 const Videos = ({
-  activeFilter = "All",
   layoutType = "grid",
   context = "homepage" // context prop for applying different styles,homepage and videodetails page
 }) => {
@@ -24,6 +24,7 @@ const Videos = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredVideo, setHoveredVideo] = useState(null);
+  const [activeFilter, setActiveFilter] = useState("All"); // Now managed here instead of prop
   const timeoutRef = useRef(null);  //avoid re-renders, if not used multiple timeouts will be running in parallel.
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const Videos = ({
           channelTitle: item.channelId,
           views: item.views,
           publishedAt: formatPublishedDate(item.uploadDate),
-          category: getRandomCategory()
+          category: item.category // Use category from database instead of random
         }));
 
         setVideos(formattedVideos);
@@ -80,16 +81,6 @@ const Videos = ({
       setFilteredVideos(filtered);
     }
   }, [activeFilter, videos]);
-
-  const getRandomCategory = () => {
-    const categories = [
-      'Music', 'Podcasts', 'Web series', 'Brides',
-      'Ghost stories', 'Film criticisms', 'Satire', 'Makeovers',
-      'Mixes', 'Ideas', 'Webisodes', 'History', 'Kitchens',
-      'Comedy', 'Gadgets', 'Asian Music', 'Presentations', 'Recently uploaded', 'Watched', 'New to you'
-    ];
-    return categories[Math.floor(Math.random() * categories.length)];
-  };
 
   const formatPublishedDate = (publishedAt) => {
     const published = new Date(publishedAt);
@@ -136,6 +127,11 @@ const Videos = ({
     <div className={`p-4 transition-all duration-300 ease-in-out ${
       context === 'homepage' ? sidebarAdjustment : ''
     }`}>
+      {/* Only show category filter on homepage */}
+      {context === 'homepage' && (
+        <CategoryFilter activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+      )}
+      
       <div className="wrapper">
         <h1 className="text-xl font-semibold mb-6">
           {activeFilter === "All" ? "Recommended" : activeFilter}
@@ -209,9 +205,6 @@ const Videos = ({
                     ${context === 'related' ? 'text-[10px] leading-tight mt-0.5' : 'text-s mt-1'}`}>
                     {video.views} views • {video.publishedAt}
                   </p>
-                  {context !== 'related' && (
-                    <p className="text-xs text-gray-400 mt-1">{video.category}</p>
-                  )}
                 </div>
               </div>
             ))

@@ -7,7 +7,7 @@ const FilterVideos = ({ onFilterChange, isSidebar2Open }) => {
 
   const categories = [
     'All', 'Music', 'Podcasts', 'Web series', 'Brides', 
-    'Ghost stories', 'Film criticisms', 'Satire', 'Makeovers', 
+    'Ghost stories', 'Film criticisms', 'Education', 'Makeovers', 
     'Mixes', 'Ideas', 'Webisodes', 'History', 'Kitchens',
     'Comedy', 'Gadgets', 'Asian Music', 'Presentations', 
     'Recently uploaded', 'Watched', 'New to you'
