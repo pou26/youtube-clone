@@ -1,31 +1,23 @@
 import mongoose from "mongoose"
 
 const metaSchema = new mongoose.Schema({
-    metaId: {
-        type: String,
-        required: [true, "Meta ID is required"], 
-        trim: true
-    },
     userId: {
         type: String,
+        required: [true, "User ID is required"], 
         required: true
     },
-    urlType: {
+    videoId: {
         type: String,
-        required: [true, "URL type is required"], 
+        required: [true, "Video ID is required"], 
         trim: true
     },
-    url: {
+    type: {
         type: String,
-        required: [true, "URL is required"], 
+        required: [true, "Like / Dislike is required"], 
         trim: true
-    },
-    createdAt: {
-        type: Date,
-        required: true
     }
 })
 
-const metaModel = mongoose.model("metas", metaSchema);
+const metaModel = mongoose.model("Meta", metaSchema);
 
 export default metaModel;

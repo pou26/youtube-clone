@@ -71,7 +71,7 @@ async function fetchVideoDetails(videoId) {
       ytVideoId: extractYoutubeId(video.videoUrl), // Extract the actual YouTube ID
       title: video.title,
       description: video.description,
-      channelTitle: video.channelId,
+      channelTitle: video.channelName,
       views: video.views,
       likes: video.likes || 0,
       dislikes: video.dislikes || 0,

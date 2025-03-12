@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
-import CategoryFilter from "./CategoryFilter"; // Import the new component
+import CategoryFilter from "./CategoryFilter";
 
-// Create axios instance
+// Create axios instance with error handling
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:4000',
   timeout: 10000,
@@ -12,9 +12,24 @@ const axiosInstance = axios.create({
   }
 });
 
+// Add request interceptor for debugging
+axiosInstance.interceptors.request.use(config => {
+  console.log('Making request to:', config.url);
+  return config;
+});
+
+// Add response interceptor for better error logging
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('API Error:', error.response?.status, error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
 const Videos = ({
   layoutType = "grid",
-  context = "homepage" // context prop for applying different styles,homepage and videodetails page
+  context = "homepage"
 }) => {
   // Get sidebar state from outlet context
   const { isSidebar2Open, isVideoDetailsPage } = useOutletContext() || { isSidebar2Open: false, isVideoDetailsPage: false };
@@ -24,38 +39,57 @@ const Videos = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredVideo, setHoveredVideo] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("All"); // Now managed here instead of prop
-  const timeoutRef = useRef(null);  //avoid re-renders, if not used multiple timeouts will be running in parallel.
+  const [activeFilter, setActiveFilter] = useState("All");
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
+        // Add detailed logging
+        console.log('Attempting to fetch videos from:', 'http://localhost:4000/videos');
+        
         const response = await axiosInstance.get("/videos");
         const data = response.data;
-        console.log(data);
+        console.log('Videos data received:', data);
+
+        // Check if data is in expected format
+        if (!Array.isArray(data)) {
+          console.error('Received non-array data:', data);
+          setError('Invalid data format received from server');
+          setLoading(false);
+          return;
+        }
 
         const formattedVideos = data.map(item => ({
           videoId: item._id, // Database ID
           ytVideoId: extractYoutubeId(item.videoUrl), // Extract YouTube ID
-          title: item.title,
-          thumbnailUrl: item.thumbnailUrl,
-          channelTitle: item.channelId,
-          views: item.views,
-          publishedAt: formatPublishedDate(item.uploadDate),
-          category: item.category // Use category from database instead of random
+          title: item.title || 'No Title',
+          thumbnailUrl: item.thumbnailUrl || 'https://via.placeholder.com/320x180',
+          channelTitle: item.channelName || 'Unknown Channel',
+          views: item.views || 0,
+          publishedAt: formatPublishedDate(item.uploadDate || new Date()),
+          category: item.category || 'Uncategorized'
         }));
 
         setVideos(formattedVideos);
         setFilteredVideos(formattedVideos);
       } catch (err) {
         console.error("Error fetching videos:", err);
-        setError(err.response?.data?.message || err.message);
+        // More detailed error message
+        const errorDetails = err.response?.data?.message || err.message || 'Unknown error';
+        const statusCode = err.response?.status ? `(Status: ${err.response.status})` : '';
+        setError(`Failed to load videos ${statusCode}: ${errorDetails}`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchVideos();
+    
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   // Function to extract YouTube video ID from URL
@@ -99,10 +133,8 @@ const Videos = ({
   const handleMouseEnter = (videoId) => {
     // Only enable hover preview for homepage context
     if (context === 'homepage') {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current); //clearTimeout for avoiding unnecessary stacking up video queue
-
-      // video plays after a delay of 800Ms,for better ui experience and avoid flickering
-      timeoutRef.current = setTimeout(() => {   //timeoutRef.current is used to store and manage the timeout ID returned by the setTimeout() function
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
         setHoveredVideo(videoId);
       }, 800);
     }
@@ -111,10 +143,24 @@ const Videos = ({
   const handleMouseLeave = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setHoveredVideo(null);
-  };    //after leaving the mouse the timeout stack will be null
+  };
 
-  if (loading) return <div className="loading">Loading videos...</div>;
-  if (error) return <div className="error">Error loading videos: {error}</div>;
+  if (loading) return <div className="loading p-8 text-center">Loading videos...</div>;
+  if (error) return (
+    <div className="error p-8 mx-auto max-w-2xl border border-red-300 bg-red-50 rounded-lg">
+      <h3 className="text-lg font-medium text-red-800 mb-2">Error loading videos</h3>
+      <p className="text-red-700">{error}</p>
+      <div className="mt-4 p-4 bg-white rounded border border-gray-200">
+        <h4 className="font-medium mb-2">Troubleshooting:</h4>
+        <ul className="list-disc pl-5 space-y-2 text-sm">
+          <li>Check if your backend server is running at <code className="bg-gray-100 px-1">http://localhost:4000</code></li>
+          <li>Verify that the <code className="bg-gray-100 px-1">/videos</code> endpoint is correctly implemented</li>
+          <li>Check server logs for additional error information</li>
+          <li>Try refreshing the page</li>
+        </ul>
+      </div>
+    </div>
+  );
 
   const videoWrapClass = layoutType === 'grid'
     ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4'
@@ -209,7 +255,9 @@ const Videos = ({
               </div>
             ))
           ) : (
-            <div className="no-videos">No videos found for this category</div>
+            <div className="no-videos p-6 border border-gray-200 rounded-lg bg-gray-50 text-center">
+              No videos found for this category
+            </div>
           )}
         </div>
       </div>

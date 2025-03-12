@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema({
         required: [true, "Comment ID is required"], 
         trim: true
     },
-    commentText: {
+    text: {
         type: String,
         required: [true, "Comment text is required"], 
         trim: true
@@ -21,12 +21,12 @@ const commentSchema = new mongoose.Schema({
         required: [true, "User ID is required"], 
         trim: true
     },
-    commentTime: {
+    timestamp: {
         type: Date,
         required: true
     }
 })
 
-const commentModel = mongoose.model("comments", commentSchema);
+const commentModel = mongoose.model("Comment", commentSchema);
 
 export default commentModel;

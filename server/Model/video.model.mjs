@@ -1,51 +1,49 @@
 import mongoose from "mongoose"
 
 const videoSchema = new mongoose.Schema({
-    videoId: {
-        type: String,
-        required: [true, "Video ID is required"], 
-        trim: true
-    },
     title: {
         type: String,
-        required: [true, "Title is required"], 
+        required: [true, "Title is required"],
         trim: true
+    },
+    videoUrl: {
+        type: String,
+        required: [true, "Video URL is required"]
     },
     channelId: {
         type: String,
-        required: [true, "Channel ID is required"], 
-        trim: true
-    },
-    uploader: {
-        type: String,
-        required: [true, "Uploader detail is required"], 
+        required: [true, "Channel ID is required"],
         trim: true
     },
     description: {
         type: String,
-        required: [true, "Description is required"], 
+        required: [true, "Description is required"],
         trim: true
     },
-    thumbnail: {
+    thumbnailUrl: {
         type: String
     },
     views: {
         type: Number,
-        required: true
+        default: 0  // Set default value instead of required
     },
     likes: {
         type: Number,
-        required: true
+        default: 0  // Set default value instead of required
     },
     dislikes: {
         type: Number,
-        required: true
+        default: 0  // Set default value instead of required
     },
     uploadDate: {
         type: Date,
         required: true
+    },
+    category: {  // Added category field to match your frontend
+        type: String,
+        default: "Other"
     }
-},{ collection: "videos" })
+}, { collection: "videos" })
 
 const Video = mongoose.model("Video", videoSchema);
 

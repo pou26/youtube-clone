@@ -3,7 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:4000",
   "scripts": {
+    "start": "PORT=2000 react-scripts start",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
