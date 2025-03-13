@@ -7,14 +7,17 @@ import App from "./App";
 import "./index.css";
 import { AuthProvider } from './components/AuthContext';
 import AuthRequiredRoute from "./components/AuthRequiredRoute";
-import ChannelUpdate from "./components/ChannelUpdate";
-import ChannelCreationForm from "./components/ChannelCreationForm";
 
 
 // Lazy-loaded components
 const VideoDetails = lazy(() => import("./components/VideoDetails"));
 const Videos = lazy(() => import("./components/Videos"));
 const ChannelPage=lazy(() => import("./components/ChannelPage"));
+const ChannelUpdate = lazy(() => import("./components/ChannelUpdate"));
+// const ChannelCreationForm = lazy(() => import("./components/ChannelCreationForm"));
+const ChannelVideosManagement=lazy(() => import("./components/ChannelVideosManagement"));
+const VideoEditForm=lazy(() => import("./components/VideoEditForm"));
+
 
 
 const appRouter = createBrowserRouter([
@@ -57,7 +60,22 @@ const appRouter = createBrowserRouter([
           </Suspense>
         ),
       },
-      
+      {
+        path: "//channel/:channelId/videos",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ChannelVideosManagement />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/edit-video/:channelId/:videoId",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <VideoEditForm />
+          </Suspense>
+        ),
+      },
       
     ],
   },

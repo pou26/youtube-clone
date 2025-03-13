@@ -141,7 +141,34 @@ export async function getVideoById(req,res,next){
         next(error);
     }
 }
-
+export async function getVideosByChannel(req, res, next) {
+    try {
+      const { channelId } = req.params;
+      
+      const videos = await Video.find({ channelId: channelId }).lean();
+      
+      if (!videos || videos.length === 0) {
+        return res.json([]);
+      }
+      
+      // Enhance videos with channel information if needed
+      for (let video of videos) {
+        // Calculate video duration if not already set
+        if (!video.duration) {
+          video.duration = 0; // Set a default duration if not available
+        }
+        
+        // Default values for missing fields
+        video.views = video.views || 0;
+        video.createdAt = video.uploadDate || video.createdAt || new Date();
+      }
+      
+      res.json(videos);
+    } catch (error) {
+      console.error("Error fetching channel videos:", error);
+      next(error);
+    }
+  }
 export async function updateLikeDislike(req, res, next) {
     try {
         const { type } = req.params;
@@ -191,3 +218,30 @@ export async function updateLikeDislike(req, res, next) {
         next(error);
     }
 }
+export async function deleteVideo(req, res, next) {
+    try {
+      const { videoId } = req.params;
+      
+      // First verify that the user has permission to delete this video
+      const video = await Video.findById(videoId);
+      if (!video) {
+        return res.status(404).json({ status: false, message: "Video not found" });
+      }
+      
+      const channel = await channelModel.findById(video.channelId);
+      if (!channel || channel.owner.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ status: false, message: "You don't have permission to delete this video" });
+      }
+      
+      // Delete the video
+      await Video.findByIdAndDelete(videoId);
+      
+      // Also remove related data (comments, likes, etc.)
+      await commentModel.deleteMany({ videoId });
+      await metaModel.deleteMany({ videoId });
+      
+      res.status(200).json({ status: true, message: "Video deleted successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }

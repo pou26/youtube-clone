@@ -295,7 +295,7 @@ const ChannelPage = () => {
           </div>
           
           {/* Subscribe button */}
-          {user && channel.owner !== user._id && (
+          {/* {user && channel.owner !== user._id && (
             <button
               onClick={handleSubscribe}
               className={`px-4 py-2 rounded-full font-medium ${
@@ -306,7 +306,7 @@ const ChannelPage = () => {
             >
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
-          )}
+          )} */}
           
           {/* Edit channel button if owner */}
           {user && channel.owner === user._id && (
@@ -315,6 +315,14 @@ const ChannelPage = () => {
               className="px-4 py-2 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800"
             >
               Customize channel
+            </Link>
+          )}
+          {user && channel.owner === user._id && (
+            <Link
+              to={`/channel/${channelId}/videos`}
+              className="px-4 py-2 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800 ml-2"
+            >
+             Manage Videos
             </Link>
           )}
         </div>
@@ -397,25 +405,25 @@ const ChannelPage = () => {
           {videos.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {videos.map(video => (
-                <Link to={`/watch/${video._id}`} key={video._id}>
+                <Link to={`/video/${video._id}`} key={video._id}>
                   <VideoCard video={video} />
                 </Link>
               ))}
             </div>
           ) : (
             <div className="text-center py-10">
-              {/* <p className="text-gray-400">This channel hasn't uploaded any videos yet.</p> */}
+              <p className="text-gray-400">This channel hasn't uploaded any videos yet.</p>
               
               {/* Show upload button if current user is channel owner */}
-              {/* {user && channel.owner === user._id && (
+              {user && channel.owner === user._id && (
                 <Link 
                   to="/upload" 
                   className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full"
                 >
                   Upload a video
                 </Link>
-              )} */}
-              <ChannelVideosManagement/>
+              )}
+
             </div>
           )}
         </div>

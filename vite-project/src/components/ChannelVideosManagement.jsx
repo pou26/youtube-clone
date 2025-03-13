@@ -147,7 +147,7 @@ const ChannelVideosManagement = () => {
         <div className="flex items-center">
           <button 
             onClick={handleSelectAll}
-            className="px-3 py-1 bg-gray-100 rounded-md text-sm mr-2 hover:bg-gray-200"
+            className="px-3 py-1 bg-gray-100 text-black rounded-md text-sm mr-2 hover:bg-gray-200"
           >
             {selectedVideos.length === videos.length ? 'Deselect All' : 'Select All'}
           </button>
@@ -173,7 +173,7 @@ const ChannelVideosManagement = () => {
             />
             <button 
               onClick={() => setSearchQuery('')}
-              className={`absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 ${!searchQuery && 'hidden'}`}
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-red text-black ${!searchQuery && 'hidden'}`}
             >
               ✕
             </button>
@@ -182,7 +182,7 @@ const ChannelVideosManagement = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border rounded-md bg-white"
+            className="px-3 py-2 border rounded-md bg-white text-black"
           >
             <option value="newest">Date (newest)</option>
             <option value="oldest">Date (oldest)</option>
@@ -326,7 +326,7 @@ const ChannelVideosManagement = () => {
       <div className="mt-6 flex justify-between items-center">
         <Link 
           to={`/channel/${channelId}`} 
-          className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+          className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300"
         >
           Back to Channel
         </Link>
