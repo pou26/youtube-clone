@@ -42,6 +42,9 @@ const videoSchema = new mongoose.Schema({
     category: {  // Added category field to match your frontend
         type: String,
         default: "Other"
+    },
+    channelName:{
+        type:String
     }
 }, { collection: "videos" })
 

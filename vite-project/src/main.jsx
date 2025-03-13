@@ -6,13 +6,16 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { AuthProvider } from './components/AuthContext';
-import AuthRequiredRoute from './components/AuthRequiredRoute';
+import AuthRequiredRoute from "./components/AuthRequiredRoute";
+import ChannelUpdate from "./components/ChannelUpdate";
+import ChannelCreationForm from "./components/ChannelCreationForm";
+
 
 // Lazy-loaded components
 const VideoDetails = lazy(() => import("./components/VideoDetails"));
 const Videos = lazy(() => import("./components/Videos"));
 const ChannelPage=lazy(() => import("./components/ChannelPage"));
-const ChannelCustomizationPage=lazy(() => import("./components/ChannelCustomizationPage"));
+
 
 const appRouter = createBrowserRouter([
   {
@@ -45,13 +48,12 @@ const appRouter = createBrowserRouter([
           </Suspense>
         ),
       },
+
       {
-        path: "/channel/:channelId/edit/:userId",
+        path: "/channels/:userId/:channelId/edit",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
-            <AuthRequiredRoute>
-              <ChannelCustomizationPage />
-            </AuthRequiredRoute>
+            <ChannelUpdate />
           </Suspense>
         ),
       },

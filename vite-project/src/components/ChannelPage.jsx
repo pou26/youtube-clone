@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
+import ChannelVideosManagement from './ChannelVideosManagement';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 
@@ -310,7 +311,7 @@ const ChannelPage = () => {
           {/* Edit channel button if owner */}
           {user && channel.owner === user._id && (
             <Link
-              to={`/channel/${channelId}/edit/${user._id}`}
+              to={`/channels/${user._id}/${channelId}/edit`}
               className="px-4 py-2 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800"
             >
               Customize channel
@@ -403,17 +404,18 @@ const ChannelPage = () => {
             </div>
           ) : (
             <div className="text-center py-10">
-              <p className="text-gray-400">This channel hasn't uploaded any videos yet.</p>
+              {/* <p className="text-gray-400">This channel hasn't uploaded any videos yet.</p> */}
               
               {/* Show upload button if current user is channel owner */}
-              {user && channel.owner === user._id && (
+              {/* {user && channel.owner === user._id && (
                 <Link 
                   to="/upload" 
                   className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full"
                 >
                   Upload a video
                 </Link>
-              )}
+              )} */}
+              <ChannelVideosManagement/>
             </div>
           )}
         </div>
