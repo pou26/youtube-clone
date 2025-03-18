@@ -60,52 +60,47 @@ export async function upsertUser(req, res, next) {
 }
 
 // Login User
-export async function loginUser(req, res, next) {
+// In your user controller
+export async function loginUser(req, res) {
     try {
         const { email, password } = req.body;
         
-        if (!email || !password) {
-            return res.status(400).json({ status: false, message: "Email and password are required!" });
-        }
-        
-        // Find user by email
+        // Find the user
         const user = await userModel.findOne({ email });
-        
         if (!user) {
-            return res.status(400).json({ status: false, message: "Invalid email or password." });
+            return res.status(400).json({ status: false, message: "Invalid email or password" });
         }
         
-        // Compare passwords
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        
-        if (!passwordMatch) {
-            return res.status(400).json({ status: false, message: "Invalid email or password." });
+        // Verify password (assuming you're using bcrypt or similar)
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
+            return res.status(400).json({ status: false, message: "Invalid email or password" });
         }
         
-        // Create user object without password
-        const userObj = { 
-            _id: user._id,
-            userName: user.userName,
-            name: user.name,
-            email: user.email,
-            avatarUrl: user.avatarUrl
-        };
-        
-        // Generate JWT token
-        const accessToken = jwt.sign(
-            { userId: user._id.toString(), email: user.email },
-            "secretKey",
-            { expiresIn: "24h" }
+        // Create token - make sure to include _id in the token payload
+        const token = jwt.sign(
+            { 
+                _id: user._id.toString(),  // Make sure this is included
+                email: user.email,
+                name: user.name
+            }, 
+            "secretKey", 
+            { expiresIn: "1d" }
         );
         
-        res.json({ 
-            status: true, 
-            message: "Login successful!", 
-            accessToken,
-            user: userObj
+        res.status(200).json({
+            status: true,
+            message: "Login successful",
+            token,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            }
         });
     } catch (error) {
-        next(error);
+        console.error("Login error:", error);
+        res.status(500).json({ status: false, message: "Login failed", error: error.message });
     }
 }
 

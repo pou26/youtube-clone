@@ -120,7 +120,7 @@ const VideoEditForm = () => {
       const currentVideoUrl = videoResponse.data.videoUrl;
       
       // Update video data
-      const updateResponse = await axios.post(`/video/${channelId}`, {
+      const updateResponse = await axios.put(`/video/${channelId}`, {
         videoId: videoId,
         title: formData.title,
         description: formData.description,

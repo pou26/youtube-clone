@@ -10,3 +10,39 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+
+  /* Default spacing for content with sidebar open */
+.content-wrapper.sidebar-open {
+  margin-left: 180px; /* Desktop default spacing */
+}
+
+/* Default spacing for content with sidebar closed */
+.content-wrapper.sidebar-closed {
+  margin-left: 0px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .content-wrapper.sidebar-open {
+    margin-left: 120px; /* Medium mobile devices */
+  }
+}
+
+@media (max-width: 576px) {
+  .content-wrapper.sidebar-open {
+    margin-left: 90px; /* Small mobile devices */
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper.sidebar-open {
+    margin-left: 60px; /* Extra small mobile devices */
+  }
+}
+
+/* Optional: Adjust top margin on mobile if needed */
+@media (max-width: 768px) {
+  .content-wrapper {
+    margin-top: 60px; /* If you want to reduce top margin on mobile too */
+  }
+}

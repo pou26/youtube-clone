@@ -8,9 +8,9 @@ export async function upsertComment(req, res, next) {
             return res.status(400).json({ status: false, message: "Request body cannot be empty." });
         }
 
-        const { text } = req.body;
+        const { text, commentId } = req.body;
         const { videoId } = req.params;
-        const userId = req.user.userId; // Get from authenticated user
+        const userId = req.user._id; // Get from authenticated user
 
         if (!text || !videoId || !userId) {
             return res.status(400).json({ status: false, message: "All fields (userId, videoId, text) are required!" });
@@ -22,17 +22,34 @@ export async function upsertComment(req, res, next) {
         }
 
         const comments = video.get("comments") || [];
-        
-        
+        console.log(JSON.stringify(comments));
+        let id = "";
         // Create a new comment with an explicit _id
-        const newComment = {
-            _id: new mongoose.Types.ObjectId(), // Generate a new ObjectId
-            userId: userId,
-            timestamp: new Date(),
-            text: text
-        };
+        if (!commentId) {
+            const newComment = {
+                _id: new mongoose.Types.ObjectId(),
+                userId: userId,
+                timestamp: new Date(),
+                text: text
+            };
+            id = newComment._id;
+            comments.push(newComment);
+        } else {
+            const commentIndex = comments.findIndex(comment =>
+                comment._id == commentId && comment.userId == userId);
+    
+            if (commentIndex === -1) {
+                return res.status(404).json({
+                    status: false,
+                    message: "Comment not found or you don't have permission to update this comment."
+                });
+            }
+            id = comments[commentIndex]._id;
+            // Update the comment text
+            comments[commentIndex].text = text;
+        }
+        console.log("AGAIN: " + JSON.stringify(comments));
 
-        comments.push(newComment);
         video.set("comments", comments);
         await video.save();
 
@@ -41,10 +58,12 @@ export async function upsertComment(req, res, next) {
             message: "Comment added successfully!", 
             data: { 
                 video, 
-                commentId: newComment._id // Return the commentId 
+                commentId: id // Return the commentId 
             } 
         });
     } catch(error) {
+        console.log(error.message);
+        console.log(error.stack);
         next(error);
     }
 }
@@ -52,7 +71,7 @@ export async function updateComment(req, res, next) {
     try {
         const { videoId, commentId } = req.params;
         const { text } = req.body;
-        const userId = req.user.userId;
+        const userId = req.user._id;
 
         if (!videoId || !commentId || !text || !userId) {
             return res.status(400).json({
@@ -61,14 +80,19 @@ export async function updateComment(req, res, next) {
             });
         }
 
+        // 🔹 Find the video document
         const video = await Video.findById(videoId);
         if (!video) {
             return res.status(404).json({ status: false, message: "Video not found." });
         }
 
-        const comments = video.get("comments") || [];
-        const commentIndex = comments.findIndex(comment =>
-            comment._id.toString() === commentId && comment.userId.toString() === userId);
+        const comments = video.comments || [];
+
+        const commentIndex = comments.findIndex(comment => {
+            // ✅ Check if _id and userId exist before calling toString()
+            if (!comment?._id || !comment?.userId) return false;
+            return comment._id.toString() === commentId && comment.userId.toString() === userId;
+        });
 
         if (commentIndex === -1) {
             return res.status(404).json({
@@ -77,25 +101,29 @@ export async function updateComment(req, res, next) {
             });
         }
 
-        // Update the comment text
+        // ✅ Update the comment text
         comments[commentIndex].text = text;
-        video.set("comments", comments);
-        await video.save();
+
+        // 🔹 Ensure changes are reflected in MongoDB
+        video.comments = comments;  // Reassign the updated comments array
+        await video.markModified("comments");  // Explicitly mark 'comments' as modified
+        await video.save();  // 🔥 Save changes to MongoDB
 
         return res.status(200).json({
             status: true,
             message: "Comment updated successfully!",
-            data: { video, updatedComment: comments[commentIndex] }
+            data: { updatedComment: comments[commentIndex] }
         });
     } catch (error) {
         next(error);
     }
 }
+
 // Delete comment
 export async function deleteComment(req, res, next) {
     try {
         const { videoId, commentId } = req.params;
-        const userId = req.user?.userId;
+        const userId = req.user._id;
 
         if (!videoId || !commentId || !userId) {
             return res.status(400).json({

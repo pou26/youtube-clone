@@ -1,7 +1,7 @@
 import { getChannelById, updateSubscription, upsertChannel } from "../Controller/channel.controller.mjs";
 import { upsertComment,getCommentsByVideoId,updateComment,deleteComment  } from "../Controller/comment.controller.mjs";
 import { upsertUser, loginUser,getCurrentUser  } from "../Controller/user.controller.mjs";
-import {getVideo,getVideoById,upsertVideo,getVideosByChannel, updateLikeDislike,deleteVideo} from "../Controller/video.controller.mjs";
+import {getVideo,getVideoById,upsertVideo,editVideo,getVideosByChannel, updateLikeDislike,deleteVideo, updateVideo} from "../Controller/video.controller.mjs";
 import { channelUpload,uploadVideo,multerErrorHandler } from "../Middleware/fileUpload.js";
 import {getUserInteraction} from "../Controller/metaController.js";
 import {authenticatedUser,authorization} from "../Middleware/auth.js"
@@ -19,9 +19,10 @@ export function routes(app) {
     // app.get("/video/:videoId/:userId", getVideoById);
     app.get("/video/:videoId", getVideoById);
     app.get("/videos/channel/:channelId", getVideosByChannel);
-
-    app.post("/video/:channelId", uploadVideo, multerErrorHandler, upsertVideo);
-    app.delete("/video/:videoId",authenticatedUser, deleteVideo);
+    app.post("/video/:channelId", authenticatedUser, uploadVideo, multerErrorHandler, upsertVideo);
+    app.put("/video/:channelId", authenticatedUser, uploadVideo, multerErrorHandler, updateVideo);
+    app.patch("/video/:videoId", authenticatedUser, editVideo);  // New endpoint for editing without uploading a new file
+    app.delete("/video/:videoId", authenticatedUser, deleteVideo);
     
     // Comments
     app.post("/comment/:videoId", authenticatedUser, upsertComment);

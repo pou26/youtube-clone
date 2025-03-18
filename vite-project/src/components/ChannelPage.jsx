@@ -6,64 +6,62 @@ import ChannelVideosManagement from './ChannelVideosManagement';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 
-
 const getImageUrl = (url) => {
-    if (!url) return null;
-    try {
-      new URL(url);
-      return url;
-    } catch (e) {
-      const baseUrl = window.location.origin;
-      return `${baseUrl}/${url.startsWith('/') ? url.substring(1) : url}`;
-    }
-  };
+  if (!url) return null;
+  try {
+    new URL(url);
+    return url;
+  } catch (e) {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/${url.startsWith('/') ? url.substring(1) : url}`;
+  }
+};
 
 const VideoCard = ({ video }) => {
-    const [imageError, setImageError] = useState(false);
-    
-    const handleImageError = () => {
-      console.error(`Failed to load thumbnail for video: ${video.title}`);
-      setImageError(true);
-    };
-    
-    // Helper function to check if URL is valid
-    const isValidUrl = (url) => {
-      if (!url) return false;
-      try {
-        new URL(url); // Will throw error if invalid
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
-    
-    
-    const thumbnailUrl = getImageUrl(video.thumbnailUrl);
-    
-    return (
-      <div className="flex flex-col">
-        <div className="relative pb-[56.25%] bg-gray-800 rounded-lg overflow-hidden mb-2">
-          {thumbnailUrl && !imageError ? (
-            <img 
-              src={thumbnailUrl} 
-              alt={video.title} 
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={handleImageError}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-              <span className="text-gray-400">No thumbnail</span>
-            </div>
-          )}
-          <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
-            {formatDuration(video.duration)}
-          </div>
-        </div>
-        <h3 className="font-medium line-clamp-2 text-sm">{video.title}</h3>
-        <p className="text-xs text-gray-400 mt-1">{video.views.toLocaleString()} views • {formatTimeAgo(video.createdAt)}</p>
-      </div>
-    );
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = () => {
+    console.error(`Failed to load thumbnail for video: ${video.title}`);
+    setImageError(true);
   };
+  
+  // Helper function to check if URL is valid
+  const isValidUrl = (url) => {
+    if (!url) return false;
+    try {
+      new URL(url); // Will throw error if invalid
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+  
+  const thumbnailUrl = getImageUrl(video.thumbnailUrl);
+  
+  return (
+    <div className="flex flex-col">
+      <div className="relative pb-[56.25%] bg-gray-800 rounded-lg overflow-hidden mb-2">
+        {thumbnailUrl && !imageError ? (
+          <img 
+            src={thumbnailUrl} 
+            alt={video.title} 
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={handleImageError}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
+            <span className="text-gray-400">No thumbnail</span>
+          </div>
+        )}
+        <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-1 rounded">
+          {formatDuration(video.duration)}
+        </div>
+      </div>
+      <h3 className="font-medium line-clamp-2 text-sm">{video.title}</h3>
+      <p className="text-xs text-gray-400 mt-1">{video.views.toLocaleString()} views • {formatTimeAgo(video.createdAt)}</p>
+    </div>
+  );
+};
 
 const formatDuration = (seconds) => {
   if (!seconds && seconds !== 0) return '0:00';
@@ -180,7 +178,6 @@ const ChannelPage = () => {
     try {
       const type = isSubscribed ? 'unsubscribe' : 'subscribe';
       
-   
       await axios.post(`/subscriptions/${type}`, {
         userId: user._id,
         channelId: channelId
@@ -211,7 +208,7 @@ const ChannelPage = () => {
   
   if (error) {
     return (
-      <div className="text-center py-10">
+      <div className="text-center py-10 px-4">
         <h2 className="text-xl font-bold">Error Loading Channel</h2>
         <p className="mt-2">{error}</p>
         <Link to="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full">
@@ -223,7 +220,7 @@ const ChannelPage = () => {
   
   if (!channel) {
     return (
-      <div className="text-center py-10">
+      <div className="text-center py-10 px-4">
         <h2 className="text-xl font-bold">Channel not found</h2>
         <p className="mt-2">The channel you're looking for doesn't exist or has been removed.</p>
         <Link to="/" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full">
@@ -236,49 +233,49 @@ const ChannelPage = () => {
   return (
     <div className="bg-black text-white min-h-screen pb-10">
       {/* Channel banner */}
-      <div className="relative h-40 md:h-56 lg:h-72 w-full bg-gray-800 overflow-hidden">
-    {channel.channelBannerUrl ? (
-      <img 
-        src={getImageUrl(channel.channelBannerUrl)} 
-        alt={`${channel.channelName} banner`} 
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          console.error("Banner failed to load");
-          e.target.style.display = 'none';
-        }}
-      />
-    ) : (
-      // Default banner with gradient
-      <div className="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
-    )}
-  </div>
+      <div className="relative h-32 sm:h-40 md:h-56 lg:h-72 w-full bg-gray-800 overflow-hidden">
+        {channel.channelBannerUrl ? (
+          <img 
+            src={getImageUrl(channel.channelBannerUrl)} 
+            alt={`${channel.channelName} banner`} 
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              console.error("Banner failed to load");
+              e.target.style.display = 'none';
+            }}
+          />
+        ) : (
+          // Default banner with gradient
+          <div className="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+        )}
+      </div>
       
       {/* Channel info section */}
-      <div className="px-4 py-6 max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+      <div className="px-4 py-4 sm:py-6 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
           {/* Channel thumbnail/logo */}
-          <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
-    {channel.channelThumbnailUrl ? (
-      <img 
-        src={getImageUrl(channel.channelThumbnailUrl)} 
-        alt={channel.channelName} 
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          console.error("Channel thumbnail failed to load");
-          e.target.style.display = 'none';
-        }}
-      />
-    ) : (
-      <div className="w-full h-full flex items-center justify-center text-4xl font-bold">
-        {channel.channelName && channel.channelName.charAt(0).toUpperCase()}
-      </div>
-    )}
-  </div>
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
+            {channel.channelThumbnailUrl ? (
+              <img 
+                src={getImageUrl(channel.channelThumbnailUrl)} 
+                alt={channel.channelName} 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  console.error("Channel thumbnail failed to load");
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold">
+                {channel.channelName && channel.channelName.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
           
           {/* Channel details */}
-          <div className="flex-grow">
-            <h1 className="text-2xl font-bold">{channel.channelName || 'Unnamed Channel'}</h1>
-            <div className="flex items-center text-gray-400 mt-1">
+          <div className="flex-grow mt-2 md:mt-0">
+            <h1 className="text-xl sm:text-2xl font-bold">{channel.channelName || 'Unnamed Channel'}</h1>
+            <div className="flex flex-wrap items-center text-gray-400 mt-1 text-xs sm:text-sm">
               <span>@{(channel.channelName || 'channel').toLowerCase().replace(/\s+/g, '')}</span>
               <span className="mx-1">•</span>
               <span>{(channel.subscribers || 0).toLocaleString()} subscribers</span>
@@ -291,48 +288,36 @@ const ChannelPage = () => {
                 </>
               )}
             </div>
-            <p className="mt-2 text-sm text-gray-300 line-clamp-2">{channel.description || 'No description'}</p>
+            <p className="mt-2 text-xs sm:text-sm text-gray-300 line-clamp-2">{channel.description || 'No description'}</p>
           </div>
           
-          {/* Subscribe button */}
-          {/* {user && channel.owner !== user._id && (
-            <button
-              onClick={handleSubscribe}
-              className={`px-4 py-2 rounded-full font-medium ${
-                isSubscribed 
-                  ? 'bg-gray-700 text-white hover:bg-gray-800' 
-                  : 'bg-red-600 text-white hover:bg-red-700'
-              }`}
-            >
-              {isSubscribed ? 'Subscribed' : 'Subscribe'}
-            </button>
-          )} */}
-          
-          {/* Edit channel button if owner */}
-          {user && channel.owner === user._id && (
-            <Link
-              to={`/channels/${user._id}/${channelId}/edit`}
-              className="px-4 py-2 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800"
-            >
-              Customize channel
-            </Link>
-          )}
-          {user && channel.owner === user._id && (
-            <Link
-              to={`/channel/${channelId}/videos`}
-              className="px-4 py-2 bg-gray-700 text-white rounded-full font-medium hover:bg-gray-800 ml-2"
-            >
-             Manage Videos
-            </Link>
-          )}
+          {/* Channel action buttons - moved to below channel details on mobile */}
+          <div className="flex flex-wrap gap-2 mt-3 w-full md:w-auto md:mt-0">
+            {user && channel.owner === user._id && (
+              <>
+                <Link
+                  to={`/channels/${user._id}/${channelId}/edit`}
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-700 text-white rounded-full text-sm font-medium hover:bg-gray-800"
+                >
+                  Customize
+                </Link>
+                <Link
+                  to={`/channel/${channelId}/videos`}
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-700 text-white rounded-full text-sm font-medium hover:bg-gray-800"
+                >
+                  Manage Videos
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
       
-      {/* Navigation tabs */}
+      {/* Navigation tabs - scrollable on mobile */}
       <div className="border-b border-gray-800">
-        <div className="flex max-w-6xl mx-auto px-4 overflow-x-auto">
+        <div className="flex max-w-6xl mx-auto px-2 overflow-x-auto scrollbar-hide">
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'videos' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('videos')}
@@ -340,7 +325,7 @@ const ChannelPage = () => {
             Videos
           </button>
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'shorts' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('shorts')}
@@ -348,7 +333,7 @@ const ChannelPage = () => {
             Shorts
           </button>
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'live' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('live')}
@@ -356,7 +341,7 @@ const ChannelPage = () => {
             Live
           </button>
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'playlists' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('playlists')}
@@ -364,7 +349,7 @@ const ChannelPage = () => {
             Playlists
           </button>
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'community' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('community')}
@@ -372,7 +357,7 @@ const ChannelPage = () => {
             Community
           </button>
           <button
-            className={`py-3 px-6 font-medium border-b-2 ${
+            className={`py-2 px-3 sm:py-3 sm:px-6 text-sm sm:text-base font-medium whitespace-nowrap border-b-2 ${
               activeTab === 'about' ? 'border-white' : 'border-transparent'
             }`}
             onClick={() => setActiveTab('about')}
@@ -382,28 +367,28 @@ const ChannelPage = () => {
         </div>
       </div>
       
-      {/* Video filter tabs */}
+      {/* Video filter tabs - made more compact on mobile */}
       {activeTab === 'videos' && (
-        <div className="max-w-6xl mx-auto px-4 mt-4 mb-6">
-          <div className="flex space-x-2 overflow-x-auto pb-2">
-            <button className="px-4 py-1 bg-white text-black rounded-full text-sm font-medium">
+        <div className="max-w-6xl mx-auto px-4 mt-3 sm:mt-4 mb-4 sm:mb-6">
+          <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+            <button className="px-3 py-1 text-xs sm:text-sm bg-white text-black rounded-full font-medium">
               Latest
             </button>
-            <button className="px-4 py-1 bg-gray-800 text-white rounded-full text-sm font-medium">
+            <button className="px-3 py-1 text-xs sm:text-sm bg-gray-800 text-white rounded-full font-medium">
               Popular
             </button>
-            <button className="px-4 py-1 bg-gray-800 text-white rounded-full text-sm font-medium">
+            <button className="px-3 py-1 text-xs sm:text-sm bg-gray-800 text-white rounded-full font-medium">
               Oldest
             </button>
           </div>
         </div>
       )}
       
-      {/* Videos grid */}
+      {/* Videos grid - responsive column count */}
       {activeTab === 'videos' && (
         <div className="max-w-6xl mx-auto px-4">
           {videos.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {videos.map(video => (
                 <Link to={`/video/${video._id}`} key={video._id}>
                   <VideoCard video={video} />
@@ -411,19 +396,18 @@ const ChannelPage = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-10">
-              <p className="text-gray-400">This channel hasn't uploaded any videos yet.</p>
+            <div className="text-center py-8 sm:py-10">
+              <p className="text-gray-400 text-sm sm:text-base">This channel hasn't uploaded any videos yet.</p>
               
               {/* Show upload button if current user is channel owner */}
               {user && channel.owner === user._id && (
                 <Link 
                   to="/video/:channelId" 
-                  className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full"
+                  className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-full"
                 >
                   Upload a video
                 </Link>
               )}
-
             </div>
           )}
         </div>
@@ -431,8 +415,8 @@ const ChannelPage = () => {
       
       {/* Placeholder content for other tabs */}
       {activeTab !== 'videos' && (
-        <div className="max-w-6xl mx-auto px-4 py-10 text-center">
-          <p className="text-gray-400">This feature is coming soon.</p>
+        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-10 text-center">
+          <p className="text-gray-400 text-sm sm:text-base">This feature is coming soon.</p>
         </div>
       )}
     </div>

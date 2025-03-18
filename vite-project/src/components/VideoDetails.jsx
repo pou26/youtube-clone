@@ -165,69 +165,53 @@ const VideoDetails = () => {
 
 
 // Handle comment submission
+// Handle comment submission (both new comments and edits)
 const handleCommentSubmit = async (e) => {
   e.preventDefault();
   
   if (!commentText.trim()) return;
-  if (!user) {
-    alert("Please login to comment");
-    return;
-  }
   
   setCommentLoading(true);
   
   try {
-    // If editing an existing comment
     if (editingComment) {
-      const response = await axios.post(`/comment/${videoId}`, {
-        commentId: editingComment,
+      // Update existing comment
+      const response = await axios.put(`/comment/${videoId}/${editingComment}`, {
         text: commentText
       });
       
-      // Update the comment in the comments list
+      // Update comments state with edited comment
       setComments(comments.map(comment => 
-        comment.commentId === editingComment 
-          ? { ...comment, text: commentText, timestamp: new Date() } 
-          : comment
+        comment._id === editingComment ? 
+          { ...comment, text: commentText, edited: true } : 
+          comment
       ));
       
+      // Clear edit state
       setEditingComment(null);
     } else {
-      // Create a new comment
+      // Create new comment
       const response = await axios.post(`/comment/${videoId}`, {
         text: commentText
       });
       
-      // The response contains the updated video object, which has the comments array
-      //extract the latest comment 
-      const newComments = response.data.data.comments || [];
-      
-      // If there are comments, add the new one end of the array
-      if (newComments.length > 0) {
-        // Get the latest comment (the one just added)
-        const newComment = newComments[newComments.length - 1];
-        
-        // Update the comments state by adding the new comment to the existing array
-        setComments([newComment, ...comments]);
-        setCommentCount(commentCount + 1);
-      } else {
-        // Fallback: if we can't get the new comment, refresh all comments
-        const commentsData = await fetchComments(videoId);
-        setComments(commentsData);
-        setCommentCount(commentsData.length);
-      }
+      // Add new comment to comments list
+      setComments([response.data.data, ...comments]);
+      setCommentCount(prev => prev + 1);
     }
     
-    // Clear the comment input
+    // Clear input
     setCommentText("");
   } catch (err) {
     console.error("Error submitting comment:", err);
-    alert("Failed to submit comment. Please try again.");
+    alert(editingComment ? 
+      "Failed to update comment. Please try again." : 
+      "Failed to post comment. Please try again."
+    );
   } finally {
     setCommentLoading(false);
   }
 };
-  
   // Handle editing a comment
   const handleEditComment = (comment) => {
     setCommentText(comment.text);
@@ -254,7 +238,7 @@ const handleCommentSubmit = async (e) => {
       await axios.delete(`/comment/${videoId}/${commentId}`);
       
       // Remove the comment from the list
-      setComments(comments.filter(comment => comment._id !== commentToDelete));
+      setComments(comments.filter(comment => comment._id !== commentToDelete._id));
       setCommentCount(prev => prev - 1);
       
       // Close the delete modal

@@ -3,12 +3,12 @@ import mongoose from "mongoose"
 const videoSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: [true, "Title is required"],
+        
         trim: true
     },
     videoUrl: {
         type: String,
-        required: [true, "Video URL is required"]
+        
     },
     channelId: {
         type: String,
@@ -17,7 +17,7 @@ const videoSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, "Description is required"],
+        
         trim: true
     },
     thumbnailUrl: {
@@ -37,7 +37,7 @@ const videoSchema = new mongoose.Schema({
     },
     uploadDate: {
         type: Date,
-        required: true
+        
     },
     category: {  // Added category field to match your frontend
         type: String,

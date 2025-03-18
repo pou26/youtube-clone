@@ -18,25 +18,28 @@ const App = () => {
   const toggleSidebar = () => setIsSidebar2Open((prev) => !prev);
   
   return (
-    <div className="app-container">
-      {/* Pass setSearchQuery to Navbar */}
-      {/* <Navbar toggleSidebar={toggleSidebar} setSearchQuery={setSearchQuery} /> */}
-      <Navbar  toggleSidebar={toggleSidebar}/>
-      <SideBar 
-        isSidebar2Open={isSidebar2Open} 
-        toggleSidebar={toggleSidebar}
-        isVideoDetailsPage={isVideoDetailsPage}
-      />
-      <div 
-        className={`content-wrapper transition-all duration-300 ease-in-out ${
-          isSidebar2Open && !isVideoDetailsPage ? 'ml-[180px]' : 'ml-[0px] mt-[70px]'
-        }`}
-      >
-      
-     
-        <Outlet context={{ isSidebar2Open, isVideoDetailsPage }} />
-      </div>
-    </div>
+<div className="app-container">
+  {/* Navbar with sidebar toggle functionality */}
+  <Navbar toggleSidebar={toggleSidebar} />
+  
+  {/* Sidebar components */}
+  <SideBar
+    isSidebar2Open={isSidebar2Open}
+    toggleSidebar={toggleSidebar}
+    isVideoDetailsPage={isVideoDetailsPage}
+  />
+  
+  {/* Content wrapper with responsive spacing using custom classes */}
+  <div
+    className={`content-wrapper transition-all duration-300 ease-in-out ${
+      isSidebar2Open && !isVideoDetailsPage 
+        ? 'sidebar-open' 
+        : 'sidebar-closed mt-[70px]'
+    }`}
+  >
+    <Outlet context={{ isSidebar2Open, isVideoDetailsPage }} />
+  </div>
+</div>
   );
 };
 

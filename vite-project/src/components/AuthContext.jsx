@@ -38,12 +38,12 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post('/login', { email, password });
       
       if (response.data.status) {
-        const { accessToken, user } = response.data;
-        localStorage.setItem('accessToken', accessToken);
+        const { token, user } = response.data;
+        localStorage.setItem('accessToken', token);
         localStorage.setItem('user', JSON.stringify(user));
         setUser(user);
-        setToken(accessToken);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        setToken(token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         return { success: true };
       }
       return { success: false, message: 'Login failed' };
@@ -81,6 +81,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
+
+  
 
   return (
     <AuthContext.Provider 

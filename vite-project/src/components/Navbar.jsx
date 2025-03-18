@@ -5,6 +5,7 @@ import LoginForm from "./LoginForm";
 import Search from "./Search";
 import ChannelCreationForm from "./ChannelCreationForm";
 import { useSearch } from './SearchContext';
+import LoginModal from './LoginModal';
 
 const Navbar = ({ toggleSidebar }) => {
   const { searchQuery, setSearchQuery } = useSearch();
@@ -21,7 +22,7 @@ const Navbar = ({ toggleSidebar }) => {
   };
 
   const handleSignIn = () => {
-    navigate('/login');
+    setShowLoginForm(true);
   };
 
   const handleLogout = () => {
@@ -201,7 +202,7 @@ const Navbar = ({ toggleSidebar }) => {
           ></div>
           
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 shadow-2xl w-11/12 md:w-auto">
-            <LoginForm onClose={() => setShowLoginForm(false)} />
+            <LoginModal onClose={() => setShowLoginForm(false)} />
           </div>
         </>
       )}

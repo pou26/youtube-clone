@@ -12,7 +12,7 @@ const ChannelVideosManagement = () => {
   const [selectedVideos, setSelectedVideos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const { user } = useContext(AuthContext);
+  const { user} = useContext(AuthContext);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -75,17 +75,86 @@ const ChannelVideosManagement = () => {
     
     if (window.confirm(`Are you sure you want to delete ${selectedVideos.length} video(s)?`)) {
       try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          setError("You are not logged in. Please log in and try again.");
+          return;
+        }
+  
+        // Use a consistent approach for all delete requests
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        };
+        
+        // Track successful and failed deletions
+        const deletedIds = [];
+        const failedIds = [];
+        
         // Delete each selected video
         for (const videoId of selectedVideos) {
-          await axios.delete(`/video/${videoId}`);
+          try {
+            await axios.delete(`/video/${videoId}`, config);
+            deletedIds.push(videoId);
+          } catch (deleteErr) {
+            console.error(`Error deleting video ${videoId}:`, deleteErr);
+            failedIds.push(videoId);
+          }
         }
         
-        // Remove deleted videos from state
-        setVideos(videos.filter(video => !selectedVideos.includes(video._id)));
-        setSelectedVideos([]);
+        // Remove successfully deleted videos from state
+        setVideos(videos.filter(video => !deletedIds.includes(video._id)));
+        
+        // Update selected videos
+        setSelectedVideos(selectedVideos.filter(id => !deletedIds.includes(id)));
+        
+        // Show a message if some deletions failed
+        if (failedIds.length > 0) {
+          setError(`Failed to delete ${failedIds.length} video(s). You may not have permission.`);
+        }
+        
       } catch (err) {
-        console.error("Error deleting videos:", err);
-        setError(err.response?.data?.message || "Failed to delete videos. Please try again.");
+        console.error("Error in delete operation:", err);
+        setError(err.response?.data?.message || "An error occurred during deletion.");
+      }
+    }
+  };
+
+  const handleDeleteVideo = async (videoId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  
+    if (window.confirm("Are you sure you want to delete this video?")) {
+      try {
+        // Get a fresh token from localStorage
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          setError("You are not logged in. Please log in and try again.");
+          return;
+        }
+  
+        // Make sure we're sending the token correctly
+        await axios.delete(`/video/${videoId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        // If successful, update the UI
+        setVideos(videos.filter(v => v._id !== videoId));
+        
+      } catch (err) {
+        console.error("Error deleting video:", err);
+        
+        if (err.response?.status === 403) {
+          setError("You don't have permission to delete this video. It may belong to another channel owner.");
+        } else if (err.response?.status === 401) {
+          setError("Your session has expired. Please log in again.");
+          // You might want to redirect to login
+        } else {
+          setError(err.response?.data?.message || "Failed to delete video. Please try again.");
+        }
       }
     }
   };
@@ -296,28 +365,12 @@ const ChannelVideosManagement = () => {
                         </svg>
                       </button>
                       <button
-  
-                        onClick={(e) => {
-                        e.preventDefault(); // Prevent default form submission
-                        e.stopPropagation(); // Stop event bubbling
-  
-                        if (window.confirm("Are you sure you want to delete this video?")) {
-                        axios.delete(`/video/${video._id}`)
-                        .then(() => {
-                      // Remove from state
-                          setVideos(videos.filter(v => v._id !== video._id));
-                        })
-                        .catch(err => {
-                        console.error("Error deleting video:", err);
-                        setError(err.response?.data?.message || "Failed to delete video. Please try again.");
-                    });
-  }
-}}
+                        onClick={(e) => handleDeleteVideo(video._id, e)}
                         className="p-1 text-red-600 hover:text-red-800"
                         title="Delete"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                       </button>
                       <Link

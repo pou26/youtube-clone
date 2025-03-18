@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import './LoginForm.css';
 
-const LoginForm = () => {
+const LoginForm = ({ isModal = false, onModalClose }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
@@ -62,40 +62,44 @@ const LoginForm = () => {
     }
   }, [user, navigate]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    
-    try {
-      let result;
-      if (isLogin) {
-        result = await login(formData.email, formData.password);
-      } else {
-        result = await register(formData);
-      }
-      
-      if (result.success) {
-        if (!isLogin) {
-          setIsLogin(true);
-          setFormData({ ...formData, password: '' });
-          setError("Registration successful! You can now login.");
-        } else {
-          navigate('/'); // Redirect to home page after successful login
-        }
-      } else {
-        setError(result.message);
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+// In LoginForm.js, modify the handleSubmit function:
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
+  
+  try {
+    let result;
+    if (isLogin) {
+      result = await login(formData.email, formData.password);
+    } else {
+      result = await register(formData);
     }
-  };
+    
+    if (result.success) {
+      if (!isLogin) {
+        setIsLogin(true);
+        setFormData({ ...formData, password: '' });
+        setError("Registration successful! You can now login.");
+      } else {
+        if (isModal && onModalClose) {
+          onModalClose(); // Close the modal first
+        }
+        navigate('/'); // Then navigate to home page
+      }
+    } else {
+      setError(result.message);
+    }
+  } catch (err) {
+    setError('An error occurred. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
 
   const handleGoogleLogin = () => {
     // Redirect to backend Google OAuth endpoint
@@ -106,10 +110,14 @@ const LoginForm = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-form-container">
-          <div className="login-header">
-            <h2>{isLogin ? 'Sign In' : 'Create Account'}</h2>
-            <Link to="/" className="close-btn">×</Link>
-          </div>
+        <div className="login-header">
+    <h2>{isLogin ? 'Sign In' : 'Create Account'}</h2>
+    {isModal ? (
+      <button className="close-btn" onClick={onModalClose}>×</button>
+    ) : (
+      <Link to="/" className="close-btn">×</Link>
+    )}
+  </div>
           
           <div className="youtube-branding">
             <img src="/youtube.png" alt="YouTube" />
