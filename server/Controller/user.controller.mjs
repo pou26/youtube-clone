@@ -108,3 +108,29 @@ export async function loginUser(req, res, next) {
         next(error);
     }
 }
+
+// Get current user
+export async function getCurrentUser(req, res, next) {
+    try {
+      const userId = req.user.userId; // authenticatedUser middleware
+      
+      const user = await userModel.findById(userId).select('-password');
+      
+      if (!user) {
+        return res.status(404).json({ status: false, message: "User not found" });
+      }
+      
+      res.status(200).json({
+        status: true,
+        user: {
+          _id: user._id,
+          userName: user.userName,
+          name: user.name,
+          email: user.email,
+          avatarUrl: user.avatarUrl
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }

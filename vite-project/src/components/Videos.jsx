@@ -3,7 +3,7 @@ import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import CategoryFilter from "./CategoryFilter";
 
-// Create axios instance with error handling
+// axios instance with error handling
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:4000',
   timeout: 10000,
@@ -12,13 +12,13 @@ const axiosInstance = axios.create({
   }
 });
 
-// Add request interceptor for debugging
+// request interceptor for debugging
 axiosInstance.interceptors.request.use(config => {
   console.log('Making request to:', config.url);
   return config;
 });
 
-// Add response interceptor for better error logging
+// response interceptor for better error logging
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
@@ -45,7 +45,7 @@ const Videos = ({
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        // Add detailed logging
+       
         console.log('Attempting to fetch videos from:', 'http://localhost:4000/videos');
         
         const response = await axiosInstance.get("/videos");
@@ -75,7 +75,7 @@ const Videos = ({
         setFilteredVideos(formattedVideos);
       } catch (err) {
         console.error("Error fetching videos:", err);
-        // More detailed error message
+        
         const errorDetails = err.response?.data?.message || err.message || 'Unknown error';
         const statusCode = err.response?.status ? `(Status: ${err.response.status})` : '';
         setError(`Failed to load videos ${statusCode}: ${errorDetails}`);

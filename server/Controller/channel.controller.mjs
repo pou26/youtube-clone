@@ -9,21 +9,21 @@ export async function upsertChannel(req, res, next) {
       const { channelId } = req.params; // Get channelId from params for PUT request
       const { channelName, description, handle } = req.body;
   
-      // Generate URLs for the uploaded files
+      
       let channelBannerUrl = null;
       let channelThumbnailUrl = null;
       
       if (req.files) {
-        // Get the base URL from server config or environment
+        //base URL from server config or environment
         const baseUrl = process.env.API_BASE_URL || 'http://localhost:4000';
         
-        // Check if bannerImage exists in the files
+        // if bannerImage exists in the files
         if (req.files.channelBanner && req.files.channelBanner[0]) {
           const relativePath = req.files.channelBanner[0].path.replace(/\\/g, '/');
           channelBannerUrl = `${baseUrl}/${relativePath}`;
         }
         
-        // Check if thumbnailImage exists in the files
+        //if thumbnailImage exists in the files
         if (req.files.channelThumbnail && req.files.channelThumbnail[0]) {
           const relativePath = req.files.channelThumbnail[0].path.replace(/\\/g, '/');
           channelThumbnailUrl = `${baseUrl}/${relativePath}`;
@@ -69,7 +69,7 @@ export async function upsertChannel(req, res, next) {
           });
         }
         
-        // Check if the user is the owner of the channel
+        //if the user is the owner of the channel
         if (existingChannel.owner.toString() !== userId) {
           return res.status(403).json({
             status: false,

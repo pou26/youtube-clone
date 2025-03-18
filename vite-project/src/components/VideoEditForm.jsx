@@ -115,6 +115,10 @@ const VideoEditForm = () => {
         updatedThumbnailUrl = uploadResponse.data.thumbnailUrl;
       }
       
+      // Fetch the current video to get the videoUrl
+      const videoResponse = await axios.get(`/video/${videoId}`);
+      const currentVideoUrl = videoResponse.data.videoUrl;
+      
       // Update video data
       const updateResponse = await axios.post(`/video/${channelId}`, {
         videoId: videoId,
@@ -122,7 +126,7 @@ const VideoEditForm = () => {
         description: formData.description,
         category: formData.category,
         thumbnailUrl: updatedThumbnailUrl,
-        videoUrl: '', // This should be fetched and passed from the video data
+        videoUrl: currentVideoUrl, // Use the current video URL
       });
       
       if (updateResponse.data.status) {

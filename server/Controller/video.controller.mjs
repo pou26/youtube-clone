@@ -53,64 +53,72 @@ export async function getVideo(req, res, next) {
 
 export async function upsertVideo(req, res, next) {
     try {
-        // Define isValidRequestBody function if it doesn't exist elsewhere
-        const isValidRequestBody = (body) => {
-            return body && Object.keys(body).length > 0;
-        };
-        
-        if (!isValidRequestBody(req.body)) {
-            return res.status(400).json({ status: false, message: "Request body cannot be empty." });
+        // Check if a file was uploaded
+        const videoFile = req.file;
+        if (!videoFile) {
+            return res.status(400).json({ status: false, message: "Video file is required!" });
         }
+
         const { channelId } = req.params;
-        const { 
-            videoId, 
-            videoUrl, 
-            title, 
-            description, 
-            thumbnailUrl,
-            category = "Other",  
-            views = 0,           
-            likes = 0,           
-            dislikes = 0         
-        } = req.body;
-        
-        if (!videoUrl || !title || !channelId) {
-            return res.status(400).json({ status: false, message: "Video title and URL and Channel ID are required!" });
+        const { videoId, title, description, thumbnailUrl, category = "Other", channelName } = req.body;
+
+        if (!title || !channelId) {
+            return res.status(400).json({ status: false, message: "Title and Channel ID are required!" });
         }
-        
+
+        // Create absolute URL for the video
+        const videoUrl = `${req.protocol}://${req.get("host")}/uploads/${videoFile.filename}`;
+
         if (!videoId) {
+            // Create new video
             const newVideo = new Video({
-                videoUrl: videoUrl,
-                description: description,
-                channelId: channelId,
-                title: title,
-                thumbnailUrl: thumbnailUrl,
+                videoUrl,
+                title,
+                description,
+                channelId,
+                thumbnailUrl,
                 uploadDate: new Date(),
-                category: category,  
-                views: views,        
-                likes: likes,        
-                dislikes: dislikes   
+                category,
+                channelName: channelName || ""
             });
+
             const savedVideo = await newVideo.save();
-            return res.status(201).json({ status: true, message: "Video created successfully!", data: savedVideo });
+            return res.status(201).json({ status: true, message: "Video uploaded successfully!", data: savedVideo });
         } else {
+            // Update existing video
             let existingVideo = await Video.findById(videoId);
             if (!existingVideo) {
                 return res.status(404).json({ status: false, message: "Video not found." });
             }
-            existingVideo.set("videoUrl", videoUrl);
-            existingVideo.set("description", description);
-            existingVideo.set("title", title);
-            existingVideo.set("channelId", channelId);
-            existingVideo.set("thumbnailUrl", thumbnailUrl);
-            existingVideo.set("category", category);  
+
+            // If updating,remove the old video file
+            if (existingVideo.videoUrl) {
+                const oldFilePath = existingVideo.videoUrl.split('/uploads/')[1];
+                if (oldFilePath) {
+                    const fullPath = path.join('uploads', oldFilePath);
+                    // Delete the file if it exists
+                    if (fs.existsSync(fullPath)) {
+                        fs.unlinkSync(fullPath);
+                    }
+                }
+            }
+
+            existingVideo.videoUrl = videoUrl;
+            existingVideo.title = title;
+            existingVideo.description = description;
+            existingVideo.thumbnailUrl = thumbnailUrl || existingVideo.thumbnailUrl;
+            existingVideo.category = category;
+            if (channelName) existingVideo.channelName = channelName;
+
             const savedVideo = await existingVideo.save();
-            res.status(201).json({ status: true, message: "Video updated successfully!", data: savedVideo });
+            return res.status(200).json({ status: true, message: "Video updated successfully!", data: savedVideo });
         }
     } catch (error) {
+        console.error("Error in upsertVideo:", error);
         next(error);
     }
 }
+
 
 export async function getVideoById(req,res,next){
     try{
@@ -151,9 +159,9 @@ export async function getVideosByChannel(req, res, next) {
         return res.json([]);
       }
       
-      // Enhance videos with channel information if needed
+     
       for (let video of videos) {
-        // Calculate video duration if not already set
+        
         if (!video.duration) {
           video.duration = 0; // Set a default duration if not available
         }
@@ -200,7 +208,7 @@ export async function updateLikeDislike(req, res, next) {
                 throw new Error("Invalid option");
         }
         
-        // Check likes and dislikes count in one Query
+        // Check likes and dislikes count
         const counts = await metaModel.aggregate([
             { $match: { videoId: videoId } },
             { $group: { _id: "$type", count: { $sum: 1 } } }
@@ -222,7 +230,7 @@ export async function deleteVideo(req, res, next) {
     try {
       const { videoId } = req.params;
       
-      // First verify that the user has permission to delete this video
+      // verify that the user has permission to delete this video
       const video = await Video.findById(videoId);
       if (!video) {
         return res.status(404).json({ status: false, message: "Video not found" });
@@ -236,7 +244,7 @@ export async function deleteVideo(req, res, next) {
       // Delete the video
       await Video.findByIdAndDelete(videoId);
       
-      // Also remove related data (comments, likes, etc.)
+      //remove related data (comments, likes, etc.)
       await commentModel.deleteMany({ videoId });
       await metaModel.deleteMany({ videoId });
       

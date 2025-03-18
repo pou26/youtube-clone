@@ -7,6 +7,7 @@ import App from "./App";
 import "./index.css";
 import { AuthProvider } from './components/AuthContext';
 import AuthRequiredRoute from "./components/AuthRequiredRoute";
+import { SearchProvider } from './components/SearchContext'; 
 
 
 // Lazy-loaded components
@@ -17,7 +18,7 @@ const ChannelUpdate = lazy(() => import("./components/ChannelUpdate"));
 // const ChannelCreationForm = lazy(() => import("./components/ChannelCreationForm"));
 const ChannelVideosManagement=lazy(() => import("./components/ChannelVideosManagement"));
 const VideoEditForm=lazy(() => import("./components/VideoEditForm"));
-
+const LoginForm=lazy(() => import("./components/LoginForm"));
 
 
 const appRouter = createBrowserRouter([
@@ -61,7 +62,7 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "//channel/:channelId/videos",
+        path: "/channel/:channelId/videos",
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <ChannelVideosManagement />
@@ -76,6 +77,16 @@ const appRouter = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "/login",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+          </Suspense>
+        ),
+      },
+
+
       
     ],
   },
@@ -84,7 +95,9 @@ const appRouter = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={appRouter} />
+      <SearchProvider> 
+        <RouterProvider router={appRouter} />
+      </SearchProvider>
     </AuthProvider>
   </StrictMode>
 );

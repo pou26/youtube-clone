@@ -417,7 +417,7 @@ const ChannelPage = () => {
               {/* Show upload button if current user is channel owner */}
               {user && channel.owner === user._id && (
                 <Link 
-                  to="/upload" 
+                  to="/video/:channelId" 
                   className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full"
                 >
                   Upload a video

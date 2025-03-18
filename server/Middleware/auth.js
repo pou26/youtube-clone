@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 
 export function authenticatedUser(req, res, next) {
     const authHeader = req.headers['authorization'];
+    console.log("Auth header:", authHeader);
+    
     const token = authHeader && authHeader.split(' ')[1];
+    console.log("Token extracted:", token ? "Token exists" : "No token");
 
     if (!token) {
         return res.status(401).json({ status: false, message: "Access Denied! No Token Provided." });
@@ -12,9 +15,11 @@ export function authenticatedUser(req, res, next) {
 
     jwt.verify(token, "secretKey", (err, decoded) => {
         if (err) {
+            console.log("JWT verification error:", err);
             return res.status(403).json({ status: false, message: "Invalid Token" });
         }
 
+        console.log("Decoded token:", decoded); 
         req.user = decoded; // Set user data from token
         next();
     });
@@ -24,7 +29,7 @@ export function authenticatedUser(req, res, next) {
 export const authorization = async (req, res, next) => {
     try {
         const { userId } = req.params;
-        const userIdFromToken = req.user?.userId; // Ensure req.user is set in authentication middleware
+        const userIdFromToken = req.user?.userId;
 
         // Validate userId
         if (!isValidObjectId(userId)) {
@@ -47,3 +52,4 @@ export const authorization = async (req, res, next) => {
         res.status(500).json({ status: false, error: error.message });
     }
 };
+

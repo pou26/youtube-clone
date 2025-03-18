@@ -1,235 +1,183 @@
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .login-form-container {
-    background-color: white;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90%;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  .login-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
-  .login-header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-  }
-  
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #606060;
-  }
-  
-  .youtube-branding {
-    display:flex;
-    align-items:center;
-    justify-content: center;
-  }
-  
-  .youtube-branding img {
-    height: 24px;
-    margin-right: 4px;
-    
-  }
-  
-  .youtube-branding span {
-    font-size: 20px;
-    font-weight: bold;
-   
-    color:black;
-  }
-  
-  .error-message {
-    color: #c00;
-    text-align: center;
-    padding: 8px 16px;
-    font-size: 14px;
-    background-color: #ffeaea;
-    margin: 0 16px 16px;
-    border-radius: 4px;
-  }
-  
-  form {
-    padding: 0 16px 16px;
-  }
-  
-  .form-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .form-fields input {
-    padding: 12px;
-    border: 1px solid #d3d3d3;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .submit-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #065fd4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  
-  .submit-btn:hover {
-    background-color: #0456bf;
-  }
-  
-  .submit-btn:disabled {
-    background-color: #87b3e7;
-    cursor: not-allowed;
-  }
-  
-  .form-footer {
-    padding: 16px;
-    border-top: 1px solid #e5e5e5;
-    text-align: center;
-    font-size: 14px;
-    color: #606060;
-  }
-  
-  .toggle-btn {
-    background: none;
-    border: none;
-    color: #065fd4;
-    font-weight: 500;
-    cursor: pointer;
-    margin-left: 4px;
-    font-size: inherit;
-  }
-  
-  /* Additional styles for Navbar user section */
-  .user-profile {
-    position: relative;
-    cursor: pointer;
-  }
-  
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .avatar-text {
-    background-color: #065fd4;
-    color: white;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-  }
-  
-  .avatar-text.large {
-    font-size: 20px;
-  }
-  
-  .user-menu {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    width: 300px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 100;
-  }
-  
-  .user-info {
-    display: flex;
-    padding: 16px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
-  .user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .user-name {
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  
-  .user-email {
-    color: #606060;
-    font-size: 13px;
-  }
-  
-  .menu-items {
-    padding: 8px 0;
-  }
-  
-  .menu-items a,
-  .menu-items button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 12px 16px;
-    background: none;
-    border: none;
-    font-size: 14px;
-    color: #030303;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .menu-items a:hover,
-  .menu-items button:hover {
-    background-color: #f2f2f2;
-  }
-  
-  .menu-items button {
-    color: #c00;
-  }
+/* new edit */
 
-  .form-fields input{
-    color:black;
-  }
+  /* LoginForm.css */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.login-container {
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.login-form-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.login-header h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #202124;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #5f6368;
+  text-decoration: none;
+}
+
+.youtube-branding {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.youtube-branding img {
+  height: 30px;
+  margin-right: 8px;
+}
+
+.youtube-branding span {
+  font-size: 22px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.error-message {
+  background-color: #fce8e6;
+  color: #d93025;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.form-fields {
+  margin-bottom: 24px;
+}
+
+.form-fields input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: border 0.2s;
+  color: black;
+}
+
+.form-fields input:focus {
+  border-color: #1a73e8;
+}
+
+.submit-btn {
+  width: 100%;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #1765cc;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.form-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #1a73e8;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+/* Google Authentication Styles */
+.google-auth-container {
+  margin-bottom: 24px;
+}
+
+.google-sign-in-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3c4043;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.google-sign-in-btn:hover {
+  background-color: #f1f3f4;
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background-color: #dadce0;
+}
+
+.divider span {
+  padding: 0 10px;
+  color: #5f6368;
+  font-size: 12px;
+}

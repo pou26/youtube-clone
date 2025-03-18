@@ -65,13 +65,17 @@ const ChannelVideosManagement = () => {
       setSelectedVideos([...selectedVideos, videoId]);
     }
   };
-  
-  const handleDeleteSelected = async () => {
+  const handleDeleteSelected = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     if (!selectedVideos.length) return;
     
     if (window.confirm(`Are you sure you want to delete ${selectedVideos.length} video(s)?`)) {
       try {
-        // In a real implementation, this would be a batch delete endpoint
+        // Delete each selected video
         for (const videoId of selectedVideos) {
           await axios.delete(`/video/${videoId}`);
         }
@@ -81,10 +85,11 @@ const ChannelVideosManagement = () => {
         setSelectedVideos([]);
       } catch (err) {
         console.error("Error deleting videos:", err);
-        setError("Failed to delete videos. Please try again.");
+        setError(err.response?.data?.message || "Failed to delete videos. Please try again.");
       }
     }
   };
+  
   
   const handleEditVideo = (videoId) => {
     navigate(`/edit-video/${channelId}/${videoId}`);
@@ -291,13 +296,23 @@ const ChannelVideosManagement = () => {
                         </svg>
                       </button>
                       <button
-                        onClick={() => {
-                          if (window.confirm("Are you sure you want to delete this video?")) {
-                            // Handle delete logic
-                            handleSelectVideo(video._id);
-                            handleDeleteSelected();
-                          }
-                        }}
+  
+                        onClick={(e) => {
+                        e.preventDefault(); // Prevent default form submission
+                        e.stopPropagation(); // Stop event bubbling
+  
+                        if (window.confirm("Are you sure you want to delete this video?")) {
+                        axios.delete(`/video/${video._id}`)
+                        .then(() => {
+                      // Remove from state
+                          setVideos(videos.filter(v => v._id !== video._id));
+                        })
+                        .catch(err => {
+                        console.error("Error deleting video:", err);
+                        setError(err.response?.data?.message || "Failed to delete video. Please try again.");
+                    });
+  }
+}}
                         className="p-1 text-red-600 hover:text-red-800"
                         title="Delete"
                       >

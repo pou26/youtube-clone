@@ -3,6 +3,6 @@ export function errorHandler(err, req, res, next) {
 
     res.status(err.status || 500).json({
         msg: err.message || "Internal Server Error",
-        error: process.env.NODE_ENV === "development" ? err.stack : {} // Hide stack trace in production
+        error: process.env.NODE_ENV === "development" ? err.stack : {} 
     });
 }

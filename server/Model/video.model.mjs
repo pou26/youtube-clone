@@ -45,6 +45,9 @@ const videoSchema = new mongoose.Schema({
     },
     channelName:{
         type:String
+    },
+    comments: {
+        type: Array
     }
 }, { collection: "videos" })
 

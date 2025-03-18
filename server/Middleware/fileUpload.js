@@ -2,13 +2,13 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Ensure the upload directory exists
+//upload directory
 const uploadDir = "uploads/";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure multer storage
+//multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 });
 
 // File filter for images
-const fileFilter = (req, file, cb) => {
+const imageFileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
@@ -29,21 +29,40 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Configure upload middleware
-const upload = multer({
+// File filter for videos
+const videoFileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("video/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only video files are allowed!"), false);
+  }
+};
+
+//  upload middleware for images
+const imageUpload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
-  fileFilter: fileFilter,
+  fileFilter: imageFileFilter,
 });
 
+//  upload middleware for videos
+const videoUpload = multer({
+  storage: storage,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
+  fileFilter: videoFileFilter,
+}).single("videoFile");
+
+// Export middleware directly
+export const uploadVideo = videoUpload;
+
 // Export middleware for different route needs
-export const channelUpload = upload.fields([
+export const channelUpload = imageUpload.fields([
   { name: "channelBanner", maxCount: 1 },
   { name: "channelThumbnail", maxCount: 1 },
 ]);
 
-export const singleUpload = upload.single("file");
-export const videoUpload = upload.single("videoFile");
+export const singleUpload = imageUpload.single("file");
+
 
 // Error handling middleware for multer errors
 export const multerErrorHandler = (err, req, res, next) => {

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import SideBar from "./components/SideBar";
+import Videos from "./components/Videos";
 import { Outlet, useLocation } from "react-router-dom";
+import { useSearch } from './components/SearchContext';
 import "./App.css";
 import "./index.css";
 
 const App = () => {
   const [isSidebar2Open, setIsSidebar2Open] = useState(false);
+  const { searchQuery } = useSearch(); 
   const location = useLocation();
   
   // Check if we're on the video details page
@@ -16,7 +19,9 @@ const App = () => {
   
   return (
     <div className="app-container">
-      <Navbar toggleSidebar={toggleSidebar} />
+      {/* Pass setSearchQuery to Navbar */}
+      {/* <Navbar toggleSidebar={toggleSidebar} setSearchQuery={setSearchQuery} /> */}
+      <Navbar  toggleSidebar={toggleSidebar}/>
       <SideBar 
         isSidebar2Open={isSidebar2Open} 
         toggleSidebar={toggleSidebar}
@@ -27,6 +32,8 @@ const App = () => {
           isSidebar2Open && !isVideoDetailsPage ? 'ml-[180px]' : 'ml-[0px] mt-[70px]'
         }`}
       >
+      
+     
         <Outlet context={{ isSidebar2Open, isVideoDetailsPage }} />
       </div>
     </div>

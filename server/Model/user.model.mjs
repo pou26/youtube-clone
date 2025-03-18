@@ -24,9 +24,12 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     password:{
+        type: String
+    },
+    googleId: {
         type: String,
-        required:true
-    }
+        default: null
+      }
 })
 
 const userModel = mongoose.model("users", userSchema);
