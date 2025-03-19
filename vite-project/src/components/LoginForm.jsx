@@ -144,7 +144,7 @@ const LoginPage = ({ isModal = false, onModalClose }) => {
 
   return (
     <div className={isModal ? "login-page modal" : "login-page min-h-screen flex items-center justify-center bg-gray-100"}>
-      <div className={isModal ? "login-container" : "bg-white p-8 rounded-lg shadow-md w-full max-w-md"}>
+      <div className={isModal ? "login-container" : "bg-white p-8 rounded-lg shadow-md w-full max-w-100"}>
         <div className="login-form-container">
           <div className="login-header">
             <h1 className="text-2xl font-bold mb-6 text-center">{isLogin ? 'Sign In' : 'Create Account'}</h1>

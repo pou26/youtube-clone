@@ -279,11 +279,11 @@ const handleCommentSubmit = async (e) => {
   if (!videoDetails) return <div className="loading">Loading video details...</div>;
   
   return (
-    <div className="flex flex-col md:flex-row gap-5 p-8 md:p-2 bg-[#111] text-white">
+    <div className="flex flex-col md:flex-row gap-5 p-4 md:p-6 lg:p-8 bg-[#111] text-white">
       {/* Video details section */}
-      <div className="md:w-2/3 lg:w-3/4">
+      <div className="w-full md:w-2/3 lg:w-3/4">
         <div className="mb-4">
-          <div className="aspect-video mb-4 ">
+          <div className="aspect-video mb-4">
             <iframe
               src={`https://www.youtube.com/embed/${videoDetails.ytVideoId}`}
               className="w-full h-full rounded-lg"
@@ -293,71 +293,71 @@ const handleCommentSubmit = async (e) => {
           </div>
           
           {/* Video title */}
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4">{videoDetails.title}</h1>
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4">{videoDetails.title}</h1>
           
           {/* Video interaction buttons */}
-          <div className="flex flex-wrap justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
             <div className="flex items-center">
-              <p className="text-sm text-gray-400 mr-4">
+              <p className="text-xs sm:text-sm text-gray-400">
                 {formatNumber(videoDetails.views)} views • {videoDetails.publishedAt}
               </p>
             </div>
             
-            <div className="flex space-x-2 text-sm">
+            <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
               {/* Like/Dislike buttons */}
               <button 
                 onClick={handleLike}
-                className={`flex items-center gap-1 px-3 py-2 rounded-full ${liked ? 'bg-gray-700' : 'hover:bg-gray-800'}`}
+                className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-2 rounded-full ${liked ? 'bg-gray-700' : 'hover:bg-gray-800'}`}
               >
-                <span className="text-lg">{liked ? '👍' : '👍'}</span>
+                <span className="text-base sm:text-lg">{liked ? '👍' : '👍'}</span>
                 <span>{formatNumber(videoDetails.likes + (liked ? 1 : 0))}</span>
               </button>
               
               <button 
                 onClick={handleDislike}
-                className={`flex items-center gap-1 px-3 py-2 rounded-full ${disliked ? 'bg-gray-700' : 'hover:bg-gray-800'}`}
+                className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-2 rounded-full ${disliked ? 'bg-gray-700' : 'hover:bg-gray-800'}`}
               >
-                <span className="text-lg">{disliked ? '👎' : '👎'}</span>
-                <span>{disliked ? 'Disliked' : ''}</span>
+                <span className="text-base sm:text-lg">{disliked ? '👎' : '👎'}</span>
+                <span className="hidden sm:inline">{disliked ? 'Disliked' : ''}</span>
               </button>
               
               {/* Share button */}
-              <button className="flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-800">
-                <span className="text-lg">↗️</span>
-                <span>Share</span>
+              <button className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-2 rounded-full hover:bg-gray-800">
+                <span className="text-base sm:text-lg">↗️</span>
+                <span className="hidden sm:inline">Share</span>
               </button>
               
               {/* Download button */}
-              <button className="flex items-center gap-1 px-3 py-2 rounded-full hover:bg-gray-800">
-                <span className="text-lg">⬇️</span>
-                <span>Download</span>
+              <button className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-2 rounded-full hover:bg-gray-800">
+                <span className="text-base sm:text-lg">⬇️</span>
+                <span className="hidden sm:inline">Download</span>
               </button>
               
               {/* More button */}
-              <button className="flex items-center px-3 py-2 rounded-full hover:bg-gray-800">
-                <span className="text-xl">⋯</span>
+              <button className="flex items-center px-2 sm:px-3 py-1 sm:py-2 rounded-full hover:bg-gray-800">
+                <span className="text-lg sm:text-xl">⋯</span>
               </button>
             </div>
           </div>
           
           {/* Channel info and subscription */}
-          <div className="bg-[#222] p-4 rounded-lg mb-4">
-            <div className="flex justify-between items-center">
+          <div className="bg-[#222] p-3 sm:p-4 rounded-lg mb-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
               <div className="flex items-center gap-3">
                 {/* Channel avatar - using a placeholder */}
-                <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center text-xl">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-600 flex items-center justify-center text-lg sm:text-xl">
                   {videoDetails.channelTitle.charAt(0)}
                 </div>
                 
                 <div>
-                  <p className="font-bold">{videoDetails.channelTitle}</p>
+                  <p className="font-bold text-sm sm:text-base">{videoDetails.channelTitle}</p>
                   <p className="text-xs text-gray-400">1.2M subscribers</p>
                 </div>
               </div>
               
               <button 
                 onClick={handleSubscribe}
-                className={`px-4 py-2 rounded-full font-medium ${
+                className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full font-medium text-sm ${
                   isSubscribed 
                     ? 'bg-gray-700 text-gray-300' 
                     : 'bg-red-600 hover:bg-red-700 text-white'
@@ -368,29 +368,29 @@ const handleCommentSubmit = async (e) => {
             </div>
             
             {/* Video description */}
-            <div className="mt-4">
-              <p className="text-sm text-gray-300 whitespace-pre-line">
+            <div className="mt-3 sm:mt-4">
+              <p className="text-xs sm:text-sm text-gray-300 whitespace-pre-line">
                 {videoDetails.description}
               </p>
             </div>
           </div>
           
- {/* Comments Section */}
- <div className="mt-6">
-            <div className="mb-4">
-              <h2 className="text-lg font-bold">{formatNumber(commentCount)} Comments</h2>
+          {/* Comments Section */}
+          <div className="mt-4 sm:mt-6">
+            <div className="mb-3 sm:mb-4">
+              <h2 className="text-base sm:text-lg font-bold">{formatNumber(commentCount)} Comments</h2>
               
               {/* Comment sorting options */}
               <div className="flex items-center mt-2">
                 <button 
                   onClick={() => handleSortChange("top")}
-                  className={`mr-4 text-sm ${sortBy === "top" ? "text-white" : "text-gray-400"}`}
+                  className={`mr-4 text-xs sm:text-sm ${sortBy === "top" ? "text-white" : "text-gray-400"}`}
                 >
                   Top comments
                 </button>
                 <button 
                   onClick={() => handleSortChange("newest")}
-                  className={`text-sm ${sortBy === "newest" ? "text-white" : "text-gray-400"}`}
+                  className={`text-xs sm:text-sm ${sortBy === "newest" ? "text-white" : "text-gray-400"}`}
                 >
                   Newest first
                 </button>
@@ -398,10 +398,10 @@ const handleCommentSubmit = async (e) => {
             </div>
             
             {/* Comment form */}
-            <div className="mb-6">
-              <div className="flex items-start gap-3">
+            <div className="mb-4 sm:mb-6">
+              <div className="flex items-start gap-2 sm:gap-3">
                 {/* User avatar */}
-                <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm flex-shrink-0">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs sm:text-sm flex-shrink-0">
                   {user ? user.name.charAt(0) : "G"}
                 </div>
                 
@@ -411,7 +411,7 @@ const handleCommentSubmit = async (e) => {
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                     placeholder="Add a comment..."
-                    className="w-full bg-transparent border-b border-gray-700 focus:border-gray-400 outline-none py-2 px-0 text-sm"
+                    className="w-full bg-transparent border-b border-gray-700 focus:border-gray-400 outline-none py-1 sm:py-2 px-0 text-xs sm:text-sm"
                   />
                   
                   {(commentText || editingComment) && (
@@ -420,111 +420,116 @@ const handleCommentSubmit = async (e) => {
                         <button
                           type="button"
                           onClick={handleCancelEdit}
-                          className="px-3 py-1 text-sm rounded-full text-gray-300 hover:bg-gray-800"
+                          className="px-2 sm:px-3 py-1 text-xs rounded-full text-gray-300 hover:bg-gray-800"
                         >
                           Cancel
                         </button>
                       )}
-                  <button
-                    type="submit"
-                    disabled={commentLoading || !commentText.trim()}
-                    className={`px-3 py-1 text-sm rounded-full ${
-                    commentLoading || !commentText.trim()
-                    ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
-                  }`}
-                  >
-                      {commentLoading ? 'Posting...' : editingComment ? 'Save' : 'Comment'}
-                    </button>
+                      <button
+                        type="submit"
+                        disabled={commentLoading || !commentText.trim()}
+                        className={`px-2 sm:px-3 py-1 text-xs rounded-full ${
+                          commentLoading || !commentText.trim()
+                          ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                        }`}
+                      >
+                        {commentLoading ? 'Posting...' : editingComment ? 'Save' : 'Comment'}
+                      </button>
                     </div>
                   )}
                 </form>
               </div>
             </div>
             
-{/* Comments list */}
-<div className="space-y-4">
-  {comments.length > 0 ? (
-    comments.map((comment, index) => {
-      
-      const commentId = comment._id || comment.commentId;
-      
-      return (
-        <div key={commentId || index} className="flex gap-3">
-          {/* Commenter avatar */}
-          <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm flex-shrink-0">
-            {comment.userName?.charAt(0) || "U"}
-          </div>
-          
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-sm">{comment.userName || "User"}</span>
-              <span className="text-gray-400 text-xs">{formatPublishedDate(comment.timestamp)}</span>
-              {comment.edited && (
-                <span className="text-gray-400 text-xs">(edited)</span>
-              )}
-            </div>
-            
-            <p className="text-sm mt-1">{comment.text}</p>
-            
-            {/* Comment actions */}
-            <div className="flex items-center gap-3 mt-2">
-              <button className="flex items-center gap-1 text-gray-400 hover:text-white">
-                <span className="text-sm">👍</span>
-                <span className="text-xs">{comment.likes || 0}</span>
-              </button>
-              
-              <button className="flex items-center gap-1 text-gray-400 hover:text-white">
-                <span className="text-sm">👎</span>
-              </button>
-              
-              {/* Only show edit/delete options if the comment was made by the current user */}
-              {user && comment.userId === user._id && (
-                <>
-                  <button 
-                    onClick={() => handleEditComment(comment)}
-                    className="text-xs text-gray-400 hover:text-white"
-                  >
-                    EDIT
-                  </button>
+            {/* Comments list */}
+            <div className="space-y-3 sm:space-y-4">
+              {comments.length > 0 ? (
+                comments.map((comment, index) => {
                   
-                  <button 
-                    onClick={() => openDeleteModal(comment)}
-                    className="text-xs text-red-400 hover:text-red-300"
-                  >
-                    DELETE
-                  </button>
-                </>
+                  const commentId = comment._id || comment.commentId;
+                  
+                  return (
+                    <div key={commentId || index} className="flex gap-2 sm:gap-3">
+                      {/* Commenter avatar */}
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs sm:text-sm flex-shrink-0">
+                        {comment.userName?.charAt(0) || "U"}
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center flex-wrap gap-1 sm:gap-2">
+                          <span className="font-medium text-xs sm:text-sm">{comment.userName || "User"}</span>
+                          <span className="text-gray-400 text-xs">{formatPublishedDate(comment.timestamp)}</span>
+                          {comment.edited && (
+                            <span className="text-gray-400 text-xs">(edited)</span>
+                          )}
+                        </div>
+                        
+                        <p className="text-xs sm:text-sm mt-1">{comment.text}</p>
+                        
+                        {/* Comment actions */}
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
+                          <button className="flex items-center gap-1 text-gray-400 hover:text-white">
+                            <span className="text-xs sm:text-sm">👍</span>
+                            <span className="text-xs">{comment.likes || 0}</span>
+                          </button>
+                          
+                          <button className="flex items-center gap-1 text-gray-400 hover:text-white">
+                            <span className="text-xs sm:text-sm">👎</span>
+                          </button>
+                          
+                          {/* Only show edit/delete options if the comment was made by the current user */}
+                          {user && comment.userId === user._id && (
+                            <>
+                              <button 
+                                onClick={() => handleEditComment(comment)}
+                                className="text-xs text-gray-400 hover:text-white"
+                              >
+                                EDIT
+                              </button>
+                              
+                              <button 
+                                onClick={() => openDeleteModal(comment)}
+                                className="text-xs text-red-400 hover:text-red-300"
+                              >
+                                DELETE
+                              </button>
+                            </>
+                          )}
+                          
+                          <button className="text-xs text-gray-400 hover:text-white">
+                            REPLY
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-4 sm:py-6 text-gray-400 text-sm">
+                  No comments yet. Be the first to comment!
+                </div>
               )}
-              
-              <button className="text-xs text-gray-400 hover:text-white">
-                REPLY
-              </button>
             </div>
-          </div>
-        </div>
-      );
-    })
-  ) : (
-    <div className="text-center py-6 text-gray-400">
-      No comments yet. Be the first to comment!
-    </div>
-  )}
-</div>
           </div>
           
           <Link
             to="/"
-            className="mt-6 inline-block text-blue-400 hover:text-blue-600 text-sm"
+            className="mt-4 sm:mt-6 inline-block text-blue-400 hover:text-blue-600 text-xs sm:text-sm"
           >
             ← Back to Videos
           </Link>
         </div>
       </div>
       
-      {/* Videos list section */}
-      <div className="md:w-1/3 lg:w-1/3 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-lg font-semibold mb-4">Related Videos</h2>
+      {/* Videos list section - hidden on small screens, collapsible on medium */}
+      <div className="w-full md:w-1/3 lg:w-1/3 overflow-y-auto max-h-[90vh] mt-4 md:mt-0">
+        <div className="flex justify-between items-center mb-2 md:mb-4">
+          <h2 className="text-base sm:text-lg font-semibold">Related Videos</h2>
+          <button className="md:hidden text-gray-400 px-2 py-1 rounded hover:bg-gray-800">
+            <span className="text-sm">Toggle</span>
+          </button>
+        </div>
         <Videos
           activeFilter="All"
           layoutType="list"
@@ -534,21 +539,21 @@ const handleCommentSubmit = async (e) => {
       
       {/* Delete confirmation modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Delete Comment</h3>
-            <p className="mb-6">Are you sure you want to delete this comment? This action cannot be undone.</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 p-4 sm:p-6 rounded-lg max-w-md w-full">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Delete Comment</h3>
+            <p className="mb-4 sm:mb-6 text-sm sm:text-base">Are you sure you want to delete this comment? This action cannot be undone.</p>
             
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white"
+                className="px-3 sm:px-4 py-1 sm:py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteComment}
-                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white"
+                className="px-3 sm:px-4 py-1 sm:py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm"
               >
                 Delete
               </button>

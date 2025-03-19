@@ -1,52 +1,155 @@
-1.For setting up the project
-install both node modules differently
+YouTube Clone Project Setup and Usage Guide
+Project Setup
+To set up the project, you need to install dependencies for both the server and client separately:
 
-cd server->npm i
-cd vite-project->npm i
+cd server
+npm i
 
-2.For logging in/sign up
+# Install client dependencies
+cd vite-project
+npm i
 
-for sign up:-  go to navbar sign in option->sign up with your own credential
+# Usage Guide
 
-for sign in:-  sign in-> email=poushaliaich1999@gmail.com password= Poushali@0123
+1.Authentication
+A. Sign Up
 
-3.For creating channel
+Navigate to the navbar and click the sign-in option
+Select "Sign Up" and create an account with your credentials
 
-Only after sign in you can click on the user avatar and a dropdown will come 
+B. Sign In
 
-I didn't set any default channel,so there's no view your channel option.You've to Create Your Channel to see the functionality
+Click on the sign-in option in the navbar
+Use the following test credentials:
 
-Click on Create your Channel a form will come ,fill all of the fields and submit,then the create your channel will automatically change to view your channel,you can click on that to view.
+Email: poushaliaich1999@gmail.com
+Password: Poushali@0123
 
-4.For fetching the Video
 
-I didn't set any default video ,so you can explicitly give any ChannelId to any video data inside Mongodb ,so every video will show inside channel,Otherwise----
 
-there's an upload video option->click on that->fillup the form ->upload->then refresh the channel once again->the video will show up
+2.Channel Creation and Management
+A. Creating a Channel
 
-5.Manage video editing
+After signing in, click on your user avatar in the navigation bar
+Select "Create Your Channel" from the dropdown menu
+Fill out all required fields in the channel creation form
+Submit the form
+The "Create Your Channel" option will automatically change to "View Your Channel"
 
-there's an option Manage video->click->click on edit icon->whatever fields you want to edit fill the fields->submit
+Click on View your Channel to view the channel Page.
 
-6.Video delete
+B. Customizing Your Channel
 
-manage videos->select the videos you want to delete->delete  OR manage videos-> delete icon
+Navigate to your channel page
+Click on "Customize Channel"
+Make your desired changes
+Submit to save your changes
 
-7.Channel management
+3.Video Management
+A. Uploading Videos
 
-customize channel->make required changes->submit
+Go to your channel page
+Click on "Upload Video"
+Complete the video upload form with all required details
+Submit the form
+Refresh the channel page to see your newly uploaded video
 
-8.comment section
+B. Editing Videos
 
-Login->click on any particular video->comment section->write your comment->post
+Navigate to "Manage Videos" on your channel page
+Click the edit icon next to the video you want to modify
+Update the desired fields in the form
+Submit to save your changes
 
-for editing or deleting you've to login ,you can edit or delete your own comments,Using edit or delete option bottom of comments
+C. Deleting Videos
+Option 1:
 
-9.Search
+Go to "Manage Videos"
+Select the checkbox next to videos you want to delete
+Click the delete button
 
-you can write any letter in search box based on title videos will come
+Option 2:
 
-10.Filteration
+Go to "Manage Videos"
+Click the delete icon next to the video you want to remove
 
-click on any filter button,videos will filter according to category
+4. Interaction Features
+Comments
 
+Sign in to your account
+Click on any video to view it
+Scroll down to the comment section
+Write your comment and post it
+You can edit or delete your own comments using the options below each comment
+
+5. Search Functionality
+
+Type any keywords in the search box at the top of the page
+Videos with matching titles will appear in the results
+
+6. Video Filtering
+
+Click on any category filter button on the home page
+Videos will be filtered according to the selected category
+
+Note About Default Content
+
+The application doesn't come with default videos or channels
+You must create a channel and upload videos to see the full functionality
+Alternatively, you can manually add a ChannelId to video data in MongoDB to associate videos with channels
+You can login with google as well
+
+
+
+
+
+
+# YouTube Clone Features
+
+Core Features
+User Authentication
+
+Secure sign-up and login system
+User profile management with avatar support
+Session persistence across page refreshes
+
+Channel Management
+
+Create personalized channels with custom details
+Customize channel appearance and information
+View channel analytics and performance metrics
+
+Video Management
+
+Upload videos with metadata (title, description, categories)
+Edit video details after uploading
+Delete unwanted videos individually or in batch
+Organize videos within your channel
+
+Video Playback
+
+High-quality video playback interface
+Responsive player that works across devices
+Video interaction controls (like, dislike, share)
+Video information display (views, publish date)
+
+Commenting System
+
+Post comments on videos
+Edit or delete your own comments
+Comment sorting options (newest first, top comments)
+Reply functionality for engaging in discussions
+
+Search and Discovery
+
+Search for videos by keywords in titles
+Filter videos by categories
+Browse related videos while watching content
+Discover new content through recommendation systems
+
+Social Features
+
+Subscribe to channels you enjoy
+Share videos across platforms
+Interact with content creators through comments
+Build a personalized feed based on subscriptions
