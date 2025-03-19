@@ -111,7 +111,7 @@ const VideoEditForm = () => {
         const formDataForUpload = new FormData();
         formDataForUpload.append('thumbnail', thumbnailFile);
         
-        const uploadResponse = await axios.post('/upload/thumbnail', formDataForUpload);
+        const uploadResponse = await axios.put(`/video/${videoId}`, formDataForUpload);
         updatedThumbnailUrl = uploadResponse.data.thumbnailUrl;
       }
       
