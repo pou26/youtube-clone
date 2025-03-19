@@ -109,7 +109,7 @@ const VideoEditForm = () => {
       // Upload thumbnail if a new one was selected
       if (thumbnailFile) {
         const formDataForUpload = new FormData();
-        formDataForUpload.append('thumbnail', thumbnailFile);
+        formDataForUpload.append('thumbnailFile', thumbnailFile);
         
         const uploadResponse = await axios.put(`/video/${videoId}`, formDataForUpload);
         updatedThumbnailUrl = uploadResponse.data.thumbnailUrl;

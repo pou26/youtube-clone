@@ -315,7 +315,7 @@ export async function editOrUpdateVideo(req, res, next) {
         console.log(videoId);
         let { title, description, category, thumbnailUrl, channelName, videoUrl } = req.body;
         const videoFile = req.files && req.files.videoFile && req.files.videoFile.length ? req.files.videoFile[0] : null;
-        const thumbnailFile = req.files.thumbnailFile && req.files.thumbnailFile.length ? req.files.thumbnailFile[0] : null;
+        const thumbnailFile = req.files && req.files.thumbnailFile && req.files.thumbnailFile.length ? req.files.thumbnailFile[0] : null;
 
 
         // Ensure authenticated user exists
