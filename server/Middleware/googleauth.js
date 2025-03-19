@@ -1,80 +1,155 @@
+// auth.js
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import userModel from "../Model/user.model.mjs";
 import jwt from "jsonwebtoken";
 import session from "express-session";
 import express from "express";
+// import dotenv from "dotenv";
+import userModel from "../Model/user.model.mjs";
+
+// Load environment variables
+// dotenv.config();
+
+const JWT_SECRET = "cLz5IWaG7v0F9U8P1M_GtyfKiUFS" ;
+const GOOGLE_CLIENT_ID = "381776458282-2avqnjvhbf7rmpv0pgb1f6sle1evdh25.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = "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";
+const FRONTEND_URL =  "http://localhost:5173";
+const BACKEND_URL = "http://localhost:4000";
 
 const authRouter = express.Router();
 
 // Express session middleware (needed for Passport)
 authRouter.use(session({
-  secret: 'cLz5IWaG7v0F9U8P1M_GtyfKiUFS',
+  secret: JWT_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', 
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // Initialize Passport
 authRouter.use(passport.initialize());
 authRouter.use(passport.session());
 
-// Google OAuth 
+// Google OAuth Strategy
 passport.use(
   new GoogleStrategy(
     {
-      clientID: "381776458282-2avqnjvhbf7rmpv0pgb1f6sle1evdh25.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:4000/auth/google/callback",
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: `${BACKEND_URL}/auth/google/callback`,
       scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        // Find existing user or create a new one
         let user = await userModel.findOne({ email: profile.emails[0].value });
 
         if (!user) {
+          // Create new user
+          const username = profile.displayName.replace(/\s+/g, "").toLowerCase() + 
+                           Math.floor(Math.random() * 1000);
+          
           user = new userModel({
-            userName: profile.displayName.replace(/\s+/g, "").toLowerCase() + Math.floor(Math.random() * 1000),
+            userName: username,
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
             avatarUrl: profile.photos?.[0]?.value || null
           });
+          
+          await user.save();
+          
+
+        } else if (!user.googleId) {
+          // If user exists but doesn't have googleId 
+          user.googleId = profile.id;
+          
+          
+          if (!user.avatarUrl && profile.photos?.[0]?.value) {
+            user.avatarUrl = profile.photos[0].value;
+          }
+          
           await user.save();
         }
 
         return done(null, user);
       } catch (error) {
+        console.error("Google auth error:", error);
         return done(error, null);
       }
     }
   )
 );
 
-passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser(async (id, done) => {
-  const user = await userModel.findById(id);
-  done(null, user);
+// User serialization/deserialization for session management
+passport.serializeUser((user, done) => {
+  done(null, user._id);
 });
 
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await userModel.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// Generate JWT token helper function
+const generateToken = (user) => {
+  return jwt.sign(
+    { 
+      userId: user._id.toString(), 
+      email: user.email 
+    },
+    JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+};
+
 // Google Auth Routes
-authRouter.get('/auth/google', passport.authenticate('google', { 
-  scope: ['profile', 'email'] 
-}));
+authRouter.get('/auth/google', 
+  passport.authenticate('google', { 
+    scope: ['profile', 'email'] 
+  })
+);
 
 authRouter.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:4000/login' }),
+  passport.authenticate('google', { 
+    failureRedirect: `${FRONTEND_URL}/login?error=google_auth_failed` 
+  }),
   (req, res) => {
-    // Generate JWT token
-    const user = req.user;
-    const accessToken = jwt.sign(
-      { userId: user.userId.toString(), email: user.email },
-      "secretKey",
-      { expiresIn: "24h" }
-    );
-
-    // Redirect to frontend with token
-    res.redirect(`http://localhost:5173`);
+    try {
+      const user = req.user;
+      
+      // Generate JWT token
+      const accessToken = generateToken(user);
+      
+      // Create a user object
+      const userData = {
+        _id: user._id,
+        userName: user.userName,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.avatarUrl,
+        defaultChannel: user.defaultChannel
+      };
+      
+      // Encode user data for URL transmission
+      const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+      
+      // Redirect to frontend with token and user data
+      res.redirect(`${FRONTEND_URL}?token=${accessToken}&userData=${encodedUserData}`);
+    } catch (error) {
+      console.error(`OAuth callback error: ${error.message}\n${error.stack}`);
+      res.redirect(`${FRONTEND_URL}/login?error=authentication_error`);
+    }
   }
 );
+
 
 export default authRouter;

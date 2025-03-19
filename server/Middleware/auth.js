@@ -2,39 +2,57 @@ import userModel from "../Model/user.model.mjs";
 import { isValidObjectId } from "./validate.mjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "secretKey"; // Consider using environment variables for this
+
+// Constants from environment variables
+const JWT_SECRET = "secretKey";
 
 export function authenticatedUser(req, res, next) {
-    try {
-        const authHeader = req.headers['authorization'];
-        console.log("Auth header:", authHeader);
-        
-        if (!authHeader) {
-            return res.status(401).json({ status: false, message: "Access Denied! No Authorization Header Provided." });
-        }
-        
-        const token = authHeader.split(' ')[1];
-        if (!token) {
-            return res.status(401).json({ status: false, message: "Access Denied! No Token Provided." });
-        }
-        
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
-            if (err) {
-                console.log("JWT verification error:", err);
-                if (err.name === "TokenExpiredError") {
-                    return res.status(401).json({ status: false, message: "Token has expired. Please login again." });
-                }
-                return res.status(403).json({ status: false, message: "Invalid Token" });
-            }
-            
-            console.log("Decoded token:", decoded);
-            req.user = decoded; // Set user data from token
-            next();
-        });
-    } catch (error) {
-        console.error("Authentication error:", error);
-        res.status(500).json({ status: false, message: "Authentication error", error: error.message });
+  try {
+    // Get authorization header
+    const authHeader = req.headers['authorization'];
+    
+    if (!authHeader) {
+      return res.status(401).json({ 
+        status: false, 
+        message: "Authentication required. No authorization header provided." 
+      });
     }
+    
+    // Extract token from Bearer header
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ 
+        status: false, 
+        message: "Authentication required. No token provided." 
+      });
+    }
+    
+    // Verify token
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).json({ 
+            status: false, 
+            message: "Session expired. Please login again." 
+          });
+        }
+        return res.status(403).json({ 
+          status: false, 
+          message: "Invalid authentication token." 
+        });
+      }
+      
+      // Set decoded user info to request object
+      req.user = decoded;
+      next();
+    });
+  } catch (error) {
+    console.error("Authentication error:", error);
+    res.status(500).json({ 
+      status: false, 
+      message: "Authentication failed due to server error." 
+    });
+  }
 }
 
 export const authorization = async (req, res, next) => {

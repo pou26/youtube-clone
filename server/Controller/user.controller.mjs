@@ -131,6 +131,7 @@ export async function getCurrentUser(req, res, next) {
         }
       });
     } catch (error) {
+        console.log(`ERROR: ${error.message}\n${error.stack}`);
       next(error);
     }
   }

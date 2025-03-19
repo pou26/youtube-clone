@@ -33,6 +33,63 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [token]);
 
+
+  useEffect(() => {
+    const handleOAuthRedirect = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tokenFromUrl = urlParams.get('token');
+      const userDataParam = urlParams.get('userData');
+      
+      if (tokenFromUrl) {
+        // Store the token
+        localStorage.setItem('accessToken', tokenFromUrl);
+        setToken(tokenFromUrl);
+        
+        // Parse and store user data if available
+        if (userDataParam) {
+          try {
+            const userData = JSON.parse(decodeURIComponent(userDataParam));
+            localStorage.setItem('user', JSON.stringify(userData));
+            setUser(userData);
+          } catch (error) {
+            console.error('Error parsing user data from URL:', error);
+            // Fetch user data if parsing fails
+            fetchUserData(tokenFromUrl);
+          }
+        } else {
+          // Fetch user data if not provided in URL
+          fetchUserData(tokenFromUrl);
+        }
+        
+        // Clean up URL after extracting parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    };
+    
+    const fetchUserData = async (authToken) => {
+      try {
+        const response = await axios.get('/user/me', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        
+        if (response.data.status && response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Handle authentication errors
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          logout();
+        }
+      }
+    };
+    
+    handleOAuthRedirect();
+  }, []);
+
+
+
   const login = async (email, password) => {
     try {
       const response = await axios.post('/login', { email, password });
@@ -74,6 +131,9 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   };
+  const loginWithGoogle = () => {
+    window.location.href = `${API_BASE_URL}/auth/google`;
+  };
 
   const updateUserData = (userData) => {
     if (!userData) return;
@@ -84,6 +144,7 @@ export const AuthProvider = ({ children }) => {
  
   return (
     <AuthContext.Provider value={{ 
+      // handleOAuthRedirect,
       user, 
       token, 
       loading, 
@@ -92,9 +153,20 @@ export const AuthProvider = ({ children }) => {
       register, 
       updateUserData,
       setUser,
-      setToken
+      setToken,
+      loginWithGoogle,
+      isAuthenticated: !!token
+      
     }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = React.useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

@@ -77,14 +77,14 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
     setIsUploading(true);
     
     try {
-      // Create one FormData with all content
+      //FormData with all content
       const formData = new FormData();
       formData.append('videoFile', videoFile);
       formData.append('title', title);
       formData.append('description', description);
       formData.append('category', category);
       
-      // Add thumbnail if available
+      
       if (thumbnailFile) {
         formData.append('thumbnailFile', thumbnailFile);
       }
@@ -99,7 +99,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
             const progress = Math.round(
               (progressEvent.loaded * 90) / progressEvent.total
             );
-            setUploadProgress(10 + progress); // Start from 10% already set
+            setUploadProgress(10 + progress); // Start from 10% 
           },
           // Set timeout for large uploads
           timeout: 300000 // 5 minutes
@@ -119,9 +119,9 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
     } catch (error) {
       console.error('Upload error:', error);
       
-      // Handle specific error cases
+      
       if (error.response) {
-        // Server responded with error
+       
         if (error.response.status === 401) {
           setError('Authentication error. Please log in again.');
         } else if (error.response.status === 413) {
@@ -135,7 +135,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
       } else if (error.code === 'ECONNABORTED') {
         setError('Upload timed out. Your video may be too large or your connection too slow.');
       } else {
-        // Something else happened
+        
         setError('Failed to upload video. Please try again.');
       }
     } finally {

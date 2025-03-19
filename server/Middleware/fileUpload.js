@@ -69,7 +69,7 @@ export const multerErrorHandler = (err, req, res, next) => {
     // Multer-specific error
     return res.status(400).json({ status: false, message: err.message });
   } else if (err) {
-    // Other types of error (e.g., custom error)
+   
     return res.status(400).json({ status: false, message: err.message });
   }
   next();

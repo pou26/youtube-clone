@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(config => {
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
-    console.error('API Error:', error.response?.status, error.response?.data || error.message);
+    console.log("HERE::: " + JSON.stringify(error?.response));
     return Promise.reject(error);
   }
 );
@@ -52,7 +52,7 @@ const Videos = ({
         const data = response.data;
         console.log('Videos data received:', data);
 
-        // Check if data is in expected format
+        // Check if data is in array
         if (!Array.isArray(data)) {
           console.error('Received non-array data:', data);
           setError('Invalid data format received from server');
@@ -61,7 +61,7 @@ const Videos = ({
         }
 
         const formattedVideos = data.map(item => ({
-          videoId: item._id, // Database ID
+          videoId: item._id, 
           ytVideoId: extractYoutubeId(item.videoUrl), // Extract YouTube ID
           title: item.title || 'No Title',
           thumbnailUrl: item.thumbnailUrl || 'https://via.placeholder.com/320x180',
