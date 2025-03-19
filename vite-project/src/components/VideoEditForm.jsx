@@ -19,7 +19,7 @@ const VideoEditForm = () => {
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Categories matching YouTube's common categories
+  // Categories matching
   const categories = [
     'Music', 
     'Gaming', 
@@ -120,13 +120,13 @@ const VideoEditForm = () => {
       const currentVideoUrl = videoResponse.data.videoUrl;
       
       // Update video data
-      const updateResponse = await axios.put(`/video/${channelId}`, {
+      const updateResponse = await axios.put(`/video/${videoId}`, {
         videoId: videoId,
         title: formData.title,
         description: formData.description,
         category: formData.category,
         thumbnailUrl: updatedThumbnailUrl,
-        videoUrl: currentVideoUrl, // Use the current video URL
+        videoUrl: currentVideoUrl, 
       });
       
       if (updateResponse.data.status) {

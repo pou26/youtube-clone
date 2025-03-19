@@ -21,15 +21,15 @@ const LoginForm = ({ isModal = false, onModalClose }) => {
   // Check for token in URL (for Google OAuth redirect)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const token = params.get('token');
+    const accessToken = params.get('accessToken');
     
-    if (token) {
+    if (accessToken) {
       // Store the token
-      localStorage.setItem('accessToken', token);
-      setToken(token);
+      localStorage.setItem('accessToken', accessToken);
+      setToken(accessToken);
       
       // Fetch user data
-      fetchUserData(token);
+      fetchUserData(accessToken);
       
       // Clean up URL
       navigate('/', { replace: true });
@@ -37,11 +37,11 @@ const LoginForm = ({ isModal = false, onModalClose }) => {
   }, [location, navigate, setToken]);
   
   // Fetch user data with token
-  const fetchUserData = async (token) => {
+  const fetchUserData = async (accessToken) => {
     try {
       const response = await fetch('http://localhost:4000/user/me', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
       

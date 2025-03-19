@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:4000'; 
+const API_BASE_URL = 'http://localhost:4000';
 axios.defaults.baseURL = API_BASE_URL;
 
 export const AuthContext = createContext(null);
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const savedToken = localStorage.getItem('accessToken');
         const savedUser = localStorage.getItem('user');
-        
+       
         if (savedToken && savedUser) {
           const parsedUser = JSON.parse(savedUser);
           setUser(parsedUser);
@@ -29,21 +29,21 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    
+   
     loadUser();
   }, [token]);
 
   const login = async (email, password) => {
     try {
       const response = await axios.post('/login', { email, password });
-      
+     
       if (response.data.status) {
-        const { token, user } = response.data;
-        localStorage.setItem('accessToken', token);
+        const { accessToken, user } = response.data;
+        localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('user', JSON.stringify(user));
         setUser(user);
-        setToken(token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setToken(accessToken);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         return { success: true };
       }
       return { success: false, message: 'Login failed' };
@@ -81,23 +81,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
-
-  
-
+ 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        token,
-        loading, 
-        login, 
-        logout, 
-        register, 
-        updateUserData, 
-        setUser,
-        setToken
-      }}
-    >
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      loading, 
+      login, 
+      logout, 
+      register, 
+      updateUserData,
+      setUser,
+      setToken
+    }}>
       {children}
     </AuthContext.Provider>
   );

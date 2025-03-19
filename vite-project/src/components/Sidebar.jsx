@@ -1,5 +1,6 @@
 import React from "react";
 import "./Sidebar.css";
+import { Link } from "react-router-dom";
 
 const SideBar = ({ isSidebar2Open, isVideoDetailsPage }) => {
   return (
@@ -7,7 +8,7 @@ const SideBar = ({ isSidebar2Open, isVideoDetailsPage }) => {
       {/* First Sidebar (Always Visible) */}
       <div className="sidebar">
         <ul className="mobile-optimized">
-            <li><span className="icon">🏠</span> <span className="text">Home</span></li>
+        <Link to="/"><li><span className="icon">🏠</span> <span className="text">Home</span></li></Link>
             <li><span className="icon">🎬</span> <span className="text">Shorts</span></li>
             <li><span className="icon">📺</span> <span className="text">Subs</span></li>
             <li><span className="icon">📚</span> <span className="text">You</span></li>

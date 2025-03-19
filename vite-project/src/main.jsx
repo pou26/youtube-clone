@@ -11,6 +11,7 @@ import { SearchProvider } from './components/SearchContext';
 
 
 // Lazy-loaded components
+const NotFound = lazy(() => import("./components/NotFound.jsx"));
 const VideoDetails = lazy(() => import("./components/VideoDetails"));
 const Videos = lazy(() => import("./components/Videos"));
 const ChannelPage=lazy(() => import("./components/ChannelPage"));
@@ -89,6 +90,11 @@ const appRouter = createBrowserRouter([
 
       
     ],
+    errorElement: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <NotFound />
+      </Suspense>
+    ),
   },
 ]);
 

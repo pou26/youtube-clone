@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
 
-// Reuse the same getImageUrl function you already have
+// Reuse getImageUrl function
 const getImageUrl = (url) => {
   if (!url) return null;
   try {
@@ -194,7 +194,7 @@ const ChannelUpdate = () => {
       <div className="text-center py-10 bg-gray-900 text-white min-h-screen">
         <h2 className="text-xl font-bold">Error</h2>
         <p className="mt-2">{error}</p>
-        <Link to={`/channel/${channelId}`} className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full">
+        <Link to={`/channel/${channelId}/${user._id}`} className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-full">
           Back to Channel
         </Link>
       </div>
@@ -369,7 +369,7 @@ const ChannelUpdate = () => {
           {/* Action buttons */}
           <div className="flex justify-end space-x-4 mt-8 border-t border-gray-800 pt-4">
             <Link 
-              to={`/channel/${channelId}`} 
+              to={`/channel/${channelId}/${user._id}`} 
               className="px-4 py-2 bg-transparent text-white rounded-full font-medium hover:bg-gray-800"
             >
               Cancel

@@ -67,13 +67,13 @@ authRouter.get('/auth/google/callback',
     // Generate JWT token
     const user = req.user;
     const accessToken = jwt.sign(
-      { userId: user._id.toString(), email: user.email },
+      { userId: user.userId.toString(), email: user.email },
       "secretKey",
       { expiresIn: "24h" }
     );
 
     // Redirect to frontend with token
-    res.redirect(`http://localhost:5173/?token=${accessToken}`);
+    res.redirect(`http://localhost:5173`);
   }
 );
 

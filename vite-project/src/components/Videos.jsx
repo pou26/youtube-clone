@@ -33,7 +33,7 @@ const Videos = ({
 }) => {
   // Get sidebar state from outlet context
   const { isSidebar2Open, isVideoDetailsPage } = useOutletContext() || { isSidebar2Open: false, isVideoDetailsPage: false };
-  
+  const { searchQuery } = useOutletContext();
   const [videos, setVideos] = useState([]);
   const [filteredVideos, setFilteredVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -115,6 +115,17 @@ const Videos = ({
       setFilteredVideos(filtered);
     }
   }, [activeFilter, videos]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredVideos(videos);
+    } else {
+      const filtered = videos.filter(video => 
+        video.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredVideos(filtered);
+    }
+  }, [searchQuery, videos]);
 
   const formatPublishedDate = (publishedAt) => {
     const published = new Date(publishedAt);

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+import { AuthContext } from './AuthContext';  
 
 const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
   const [title, setTitle] = useState('');
@@ -15,14 +16,26 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
   const [videoPreview, setVideoPreview] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
 
+  // Get auth context
+  const { ensureValidToken } = useContext(AuthContext);
+
   const categories = [
     'Entertainment', 'Music', 'Gaming', 'Sports', 'Education',
     'Science & Technology', 'Travel', 'News', 'Comedy', 'Other'
   ];
 
+  // Clean up object URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (videoPreview) URL.revokeObjectURL(videoPreview);
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    };
+  }, [videoPreview, thumbnailPreview]);
+
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (videoPreview) URL.revokeObjectURL(videoPreview); // Clean up previous URL
       setVideoFile(file);
       // Create URL for preview
       const videoURL = URL.createObjectURL(file);
@@ -33,6 +46,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
   const handleThumbnailChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview); // Clean up previous URL
       setThumbnailFile(file);
       // Create URL for preview
       const thumbURL = URL.createObjectURL(file);
@@ -52,74 +66,78 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
       return;
     }
 
+    // Check token validity before proceeding
+    // const isTokenValid = await ensureValidToken();
+    // if (!isTokenValid) {
+    //   setError('Your session has expired. Please log in again.');
+    //   return;
+    // }
+
     setError('');
     setIsUploading(true);
     
     try {
-      // First upload files to get URLs
-      const videoFormData = new FormData();
-      videoFormData.append('file', videoFile);
-      videoFormData.append('upload_preset', 'video_uploads'); // Create this preset in your cloud provider
+      // Create one FormData with all content
+      const formData = new FormData();
+      formData.append('videoFile', videoFile);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('category', category);
+      
+      // Add thumbnail if available
+      if (thumbnailFile) {
+        formData.append('thumbnailFile', thumbnailFile);
+      }
       
       setUploadProgress(10);
       
-
-      const videoUploadResponse = await axios.post(
-        'https://localhost:4000/upload', 
-        videoFormData, 
+      const uploadResponse = await axios.post(
+        `/video/${channelId}`,
+        formData, 
         {
           onUploadProgress: (progressEvent) => {
             const progress = Math.round(
-              (progressEvent.loaded * 70) / progressEvent.total
+              (progressEvent.loaded * 90) / progressEvent.total
             );
-            setUploadProgress(10 + progress);
-          }
+            setUploadProgress(10 + progress); // Start from 10% already set
+          },
+          // Set timeout for large uploads
+          timeout: 300000 // 5 minutes
         }
       );
       
-      const videoUrl = videoUploadResponse.data.url;
-      let thumbnailUrl = '';
-      
-      // Upload thumbnail
-      if (thumbnailFile) {
-        const thumbnailFormData = new FormData();
-        thumbnailFormData.append('file', thumbnailFile);
-        thumbnailFormData.append('upload_preset', 'thumbnail_uploads');
-        
-        const thumbnailUploadResponse = await axios.post(
-          'ttps://localhost:4000/upload',
-          thumbnailFormData
-        );
-        
-        thumbnailUrl = thumbnailUploadResponse.data.url;
-      }
-      
-      setUploadProgress(85);
-      
-      // create video in database
-      const videoData = {
-        title,
-        description,
-        videoUrl,
-        thumbnailUrl,
-        category
-      };
-      
-      const response = await axios.post(`/video/${channelId}`, videoData);
-      
       setUploadProgress(100);
       
-      if (response.data.status) {
+      if (uploadResponse.data.status) {
         // Clear form and close modal on success
         resetForm();
-        if (onSuccess) onSuccess(response.data.data);
+        if (onSuccess) onSuccess(uploadResponse.data.data);
         onClose();
       } else {
-        setError('Failed to create video');
+        setError(uploadResponse.data.message || 'Failed to create video');
       }
     } catch (error) {
       console.error('Upload error:', error);
-      setError(error.response?.data?.message || 'Failed to upload video. Please try again.');
+      
+      // Handle specific error cases
+      if (error.response) {
+        // Server responded with error
+        if (error.response.status === 401) {
+          setError('Authentication error. Please log in again.');
+        } else if (error.response.status === 413) {
+          setError('Video file is too large. Please upload a smaller file.');
+        } else {
+          setError(error.response.data?.message || `Server error: ${error.response.status}`);
+        }
+      } else if (error.request) {
+        // Request made but no response
+        setError('Server did not respond. Please check your connection and try again.');
+      } else if (error.code === 'ECONNABORTED') {
+        setError('Upload timed out. Your video may be too large or your connection too slow.');
+      } else {
+        // Something else happened
+        setError('Failed to upload video. Please try again.');
+      }
     } finally {
       setIsUploading(false);
     }
@@ -133,8 +151,16 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
     setCategory('Other');
     setError('');
     setUploadProgress(0);
-    setVideoPreview(null);
-    setThumbnailPreview(null);
+    
+    // Clean up object URLs
+    if (videoPreview) {
+      URL.revokeObjectURL(videoPreview);
+      setVideoPreview(null);
+    }
+    if (thumbnailPreview) {
+      URL.revokeObjectURL(thumbnailPreview);
+      setThumbnailPreview(null);
+    }
   };
 
   if (!isOpen) return null;
@@ -148,6 +174,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
             <button 
               onClick={onClose}
               className="text-gray-400 hover:text-white"
+              disabled={isUploading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -162,7 +189,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
           )}
 
           <div className="space-y-4">
-            {/* Video Upload */}
+            {/* Video Upload Section */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Video File <span className="text-red-500">*</span>
@@ -184,7 +211,9 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                       src={videoPreview}
                     />
                     <button 
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (videoPreview) URL.revokeObjectURL(videoPreview);
                         setVideoFile(null);
                         setVideoPreview(null);
                       }}
@@ -222,6 +251,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                 className="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-2 text-white"
                 placeholder="Enter video title"
                 disabled={isUploading}
+                maxLength={100}
               />
             </div>
 
@@ -236,6 +266,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                 className="w-full bg-gray-800 border border-gray-700 rounded-md px-4 py-2 text-white h-24"
                 placeholder="Enter video description"
                 disabled={isUploading}
+                maxLength={5000}
               ></textarea>
             </div>
 
@@ -278,7 +309,9 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                       className="w-full h-32 object-cover rounded-md"
                     />
                     <button 
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
                         setThumbnailFile(null);
                         setThumbnailPreview(null);
                       }}
@@ -297,7 +330,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span className="text-gray-400">Click to upload thumbnail</span>
-                    <span className="text-xs text-gray-500 mt-1">JPG, PNG, WebP</span>
+                    <span className="text-xs text-gray-500 mt-1">JPG, PNG, WebP (max 5MB)</span>
                   </label>
                 )}
               </div>
@@ -311,7 +344,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-2">
                   <div 
-                    className="bg-blue-600 h-2 rounded-full" 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
                     style={{ width: `${uploadProgress}%` }}
                   ></div>
                 </div>
@@ -321,14 +354,14 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-700 text-white rounded-md"
+                className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition"
                 disabled={isUploading}
               >
                 Cancel
               </button>
               <button
                 onClick={uploadVideo}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
                 disabled={isUploading}
               >
                 {isUploading ? 'Uploading...' : 'Upload Video'}

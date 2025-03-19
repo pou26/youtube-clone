@@ -128,7 +128,24 @@ export async function getChannelById(req, res, next){
         next(error);
     }
 }
-
+// Add this new function to fetch all channels for a user
+export async function getUserChannels(req, res, next) {
+  try {
+    const { userId } = req.params;
+    
+    // Find all channels where the user is the owner
+    const userChannels = await channelModel.find({ owner: userId }).lean();
+    
+    if (!userChannels || userChannels.length === 0) {
+      return res.json([]);
+    }
+    
+    return res.json(userChannels);
+  } catch (error) {
+    console.error("Error fetching user channels:", error);
+    next(error);
+  }
+}
 export async function updateSubscription(req, res, next) {
     try {
         const { type } = req.params;

@@ -1,10 +1,10 @@
-import { getChannelById, updateSubscription, upsertChannel } from "../Controller/channel.controller.mjs";
+import { getChannelById, updateSubscription, upsertChannel,getUserChannels } from "../Controller/channel.controller.mjs";
 import { upsertComment,getCommentsByVideoId,updateComment,deleteComment  } from "../Controller/comment.controller.mjs";
 import { upsertUser, loginUser,getCurrentUser  } from "../Controller/user.controller.mjs";
-import {getVideo,getVideoById,upsertVideo,editVideo,getVideosByChannel, updateLikeDislike,deleteVideo, updateVideo} from "../Controller/video.controller.mjs";
-import { channelUpload,uploadVideo,multerErrorHandler } from "../Middleware/fileUpload.js";
+import {getVideo,getVideoById,upsertVideo,editOrUpdateVideo,getVideosByChannel, updateLikeDislike,deleteVideo} from "../Controller/video.controller.mjs";
+import { channelUpload,videoAndThumbnailUpload ,multerErrorHandler } from "../Middleware/fileUpload.js";
 import {getUserInteraction} from "../Controller/metaController.js";
-import {authenticatedUser,authorization} from "../Middleware/auth.js"
+import {authenticatedUser, authorization} from "../Middleware/auth.js"
 
 
 export function routes(app) {
@@ -19,9 +19,9 @@ export function routes(app) {
     // app.get("/video/:videoId/:userId", getVideoById);
     app.get("/video/:videoId", getVideoById);
     app.get("/videos/channel/:channelId", getVideosByChannel);
-    app.post("/video/:channelId", authenticatedUser, uploadVideo, multerErrorHandler, upsertVideo);
-    app.put("/video/:channelId", authenticatedUser, uploadVideo, multerErrorHandler, updateVideo);
-    app.patch("/video/:videoId", authenticatedUser, editVideo);  // New endpoint for editing without uploading a new file
+    app.post("/video/:channelId", authenticatedUser, videoAndThumbnailUpload, multerErrorHandler, upsertVideo);
+
+    app.put("/video/:videoId", authenticatedUser, videoAndThumbnailUpload, multerErrorHandler, editOrUpdateVideo);
     app.delete("/video/:videoId", authenticatedUser, deleteVideo);
     
     // Comments
@@ -33,7 +33,9 @@ export function routes(app) {
     // Channels
     app.post("/channels/:userId", channelUpload, upsertChannel);
     app.get("/channel/:channelId/:userId", getChannelById);
+    app.get("/user/:userId/channels", getUserChannels);
     app.put('/channels/:userId/:channelId', channelUpload, upsertChannel);
+    
     
     // Like Dislike
     app.post("/opinion/:type", updateLikeDislike);

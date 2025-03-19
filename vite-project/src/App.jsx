@@ -37,7 +37,7 @@ const App = () => {
         : 'sidebar-closed mt-[70px]'
     }`}
   >
-    <Outlet context={{ isSidebar2Open, isVideoDetailsPage }} />
+    <Outlet context={{ isSidebar2Open, isVideoDetailsPage,searchQuery }} />
   </div>
 </div>
   );

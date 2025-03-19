@@ -40,7 +40,7 @@ export function authenticatedUser(req, res, next) {
 export const authorization = async (req, res, next) => {
     try {
         const { userId } = req.params;
-        const userIdFromToken = req.user?._id;
+        const userIdFromToken = req.user?.userId; // Changed from req.user?._id to req.user?.userId
         
         if (!userIdFromToken) {
             return res.status(401).json({ status: false, message: "User not authenticated properly." });
@@ -58,7 +58,7 @@ export const authorization = async (req, res, next) => {
         }
         
         // Check if the logged-in user has access
-        if (findUser._id.toString() !== userIdFromToken.toString()) {
+        if (findUser.userId.toString() !== userIdFromToken.toString()) { // Changed from findUser._id to findUser.userId
             return res.status(403).json({ status: false, message: "Unauthorized access!" });
         }
         

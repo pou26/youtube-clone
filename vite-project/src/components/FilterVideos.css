@@ -1,7 +1,7 @@
 /* Wrapper to keep arrows fixed */
 .filter-wrapper {
     position: sticky;
-    top: 56px; /* Adjust based on navbar height */
+    top: 56px; 
     z-index: 200;
     background-color: #0f0f0f;
     display: flex;
@@ -21,7 +21,7 @@
     margin: 0 40px; /* Space for arrows */
 }
 
-/* Hide scrollbar but allow scrolling */
+/* Hide scrollbar  */
 .filter-container::-webkit-scrollbar, 
 .filter-container-shifted::-webkit-scrollbar {
     display:none;
@@ -82,12 +82,12 @@
 }
 
 .filter-container {
-    margin-left: 72px; /* Adjust based on your collapsed sidebar width */
+    margin-left: 72px; 
     transition: margin-left 0.3s ease;
 }
 
 .filter-container-shifted {
-    margin-left: 240px; /* Adjust based on your expanded sidebar width */
+    margin-left: 240px; 
     transition: margin-left 0.3s ease;
 }
 
@@ -126,6 +126,6 @@
     }
 
     .scroll-arrow {
-        display: none; /* Hide arrows on small screens */
+        display: none; 
     }
 }

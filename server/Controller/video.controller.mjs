@@ -47,6 +47,7 @@ export async function getVideo(req, res, next) {
         
         res.json(enrichedVideos);
     } catch (error) {
+        console.log(`Error: ${error.message}/n${error.stack}`)
         next(error);
     }
 }
@@ -54,13 +55,17 @@ export async function getVideo(req, res, next) {
 export async function upsertVideo(req, res, next) {
     try {
         // Check if a file was uploaded
-        const videoFile = req.file;
+        console.log(JSON.stringify(req.files));
+        const videoFile = req.files.videoFile[0];
         if (!videoFile) {
             return res.status(400).json({ status: false, message: "Video file is required!" });
         }
-
+        const thumbnailFile = req.files.thumbnailFile && req.files.thumbnailFile.length ? req.files.thumbnailFile[0] : null;
+        if (!thumbnailFile) {
+            return res.status(400).json({ status: false, message: "Thumbnail is required!" });
+        }
         const { channelId } = req.params;
-        const { videoId, title, description, thumbnailUrl, category = "Other", channelName } = req.body;
+        const { videoId, title, description, category = "Other", channelName } = req.body;
 
         if (!title || !channelId) {
             return res.status(400).json({ status: false, message: "Title and Channel ID are required!" });
@@ -72,12 +77,13 @@ export async function upsertVideo(req, res, next) {
             return res.status(404).json({ status: false, message: "Channel not found." });
         }
         
-        if (req.user && channel.owner.toString() !== req.user._id.toString()) {
+        if (req.user && channel.owner.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ status: false, message: "You don't have permission to upload to this channel." });
         }
 
         // Create absolute URL for the video
         const videoUrl = `${req.protocol}://${req.get("host")}/uploads/${videoFile.filename}`;
+        const thumbnailUrl = `${req.protocol}://${req.get("host")}/uploads/${thumbnailFile.filename}`;
 
         if (!videoId) {
             // Create new video
@@ -103,7 +109,7 @@ export async function upsertVideo(req, res, next) {
 
             // Check if user owns the video
             const videoChannel = await channelModel.findById(existingVideo.channelId);
-            if (!videoChannel || videoChannel.owner.toString() !== req.user._id.toString()) {
+            if (!videoChannel || videoChannel.owner.toString() !== req.user.userId.toString()) {
                 return res.status(403).json({ status: false, message: "You don't have permission to edit this video." });
             }
 
@@ -140,79 +146,6 @@ export async function upsertVideo(req, res, next) {
     }
 }
 
-export async function updateVideo(req, res, next) {
-    try {
-        const videoFile = req.file;
-        // if (!videoFile) {
-        //     return res.status(400).json({ status: false, message: "Video file is required!" });
-        // }
-
-        const { channelId } = req.params;
-        let { videoId, title, description, thumbnailUrl, category = "Other", channelName, videoUrl } = req.body;
-
-        if (!videoId) {
-            return res.status(400).json({ status: false, message: "Video ID are required!" });
-        }
-
-        // Check if user owns the channel
-        const channel = await channelModel.findById(channelId);
-        if (!channel) {
-            return res.status(404).json({ status: false, message: "Channel not found." });
-        }
-        
-        if (req.user && channel.owner.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ status: false, message: "You don't have permission to upload to this channel." });
-        }
-
-        // Create absolute URL for the video
-        videoUrl = videoFile ? `${req.protocol}://${req.get("host")}/uploads/${videoFile.filename}` : videoUrl;
-        if (!videoUrl) {
-            throw new Error(`Invalid video URL for video ID: ${videoId}`);
-        }
-
-        // Update existing video
-        let existingVideo = await Video.findById(videoId);
-        if (!existingVideo) {
-            return res.status(404).json({ status: false, message: "Video not found." });
-        }
-
-        // Check if user owns the video
-        const videoChannel = await channelModel.findById(existingVideo.channelId);
-        if (!videoChannel || videoChannel.owner.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ status: false, message: "You don't have permission to edit this video." });
-        }
-
-        // If updating, remove the old video file
-        if (existingVideo.videoUrl) {
-            try {
-                const oldFilePath = existingVideo.videoUrl.split('/uploads/')[1];
-                if (oldFilePath) {
-                    const fullPath = path.join('uploads', oldFilePath);
-                    // Delete the file if it exists
-                    if (fs.existsSync(fullPath)) {
-                        fs.unlinkSync(fullPath);
-                    }
-                }
-            } catch (error) {
-                console.error("Error deleting old video file:", error);
-                // Continue with the update even if file deletion fails
-            }
-        }
-
-        existingVideo.videoUrl = videoUrl;
-        existingVideo.title = title;
-        existingVideo.description = description;
-        existingVideo.thumbnailUrl = thumbnailUrl || existingVideo.thumbnailUrl;
-        existingVideo.category = category;
-        if (channelName) existingVideo.channelName = channelName;
-
-        const savedVideo = await existingVideo.save();
-        return res.status(200).json({ status: true, message: "Video updated successfully!", data: savedVideo });
-    } catch (error) {
-        console.log("Error in add video: " + error.message);
-        next(error);
-    }
-}
 
 export async function getVideoById(req,res,next){
     try{
@@ -337,12 +270,12 @@ export async function deleteVideo(req, res, next) {
         }
         
         // Check if req.user exists before accessing properties
-        if (!req.user || !req.user._id) {
+        if (!req.user || !req.user.userId) {
             return res.status(401).json({ status: false, message: "User not authenticated properly" });
         }
         
         // Check if the logged-in user is the owner of the channel
-        if (channel.owner.toString() !== req.user._id.toString()) {
+        if (channel.owner.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ status: false, message: "You don't have permission to delete this video" });
         }
         
@@ -376,39 +309,69 @@ export async function deleteVideo(req, res, next) {
     }
 }
 
-export async function editVideo(req, res, next) {
+export async function editOrUpdateVideo(req, res, next) {
     try {
         const { videoId } = req.params;
-        const { title, description, category, thumbnailUrl } = req.body;
-        
-        // Check if video exists
+        console.log(videoId);
+        const { title, description, category, thumbnailUrl, channelName, videoUrl } = req.body;
+        const videoFile = req.file;
+
+        // Ensure authenticated user exists
+        if (!req.user) {
+            return res.status(401).json({ status: false, message: "Unauthorized: User not found" });
+        }
+
+        // Find video
         const video = await Video.findById(videoId);
         if (!video) {
             return res.status(404).json({ status: false, message: "Video not found" });
         }
-        
-        // Verify that the user has permission to edit this video
+
+        // Find channel associated with video
         const channel = await channelModel.findById(video.channelId);
-        if (!channel) {
-            return res.status(404).json({ status: false, message: "Channel not found" });
+        if (!channel || !channel.owner) {
+            return res.status(404).json({ status: false, message: "Channel not found or owner missing" });
         }
-        
-        // Check if the logged-in user is the owner of the channel
-        if (!req.user || channel.owner.toString() !== req.user._id.toString()) {
+
+        // Check if the user owns the channel
+        if (channel.owner.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ status: false, message: "You don't have permission to edit this video" });
         }
-        
-        // Update the video
+
+        // Handle video file update
+        if (videoFile) {
+            const newVideoUrl = `${req.protocol}://${req.get("host")}/uploads/${videoFile.filename}`;
+
+            // Delete old video file if it exists
+            if (video.videoUrl) {
+                try {
+                    const oldFilePath = video.videoUrl.split('/uploads/')[1];
+                    if (oldFilePath) {
+                        const fullPath = path.join('uploads', oldFilePath);
+                        if (fs.existsSync(fullPath)) {
+                            fs.unlinkSync(fullPath);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error deleting old video file:", error);
+                }
+            }
+            video.videoUrl = newVideoUrl;
+        }
+
+        // Update fields if provided
         if (title) video.title = title;
         if (description) video.description = description;
         if (category) video.category = category;
         if (thumbnailUrl) video.thumbnailUrl = thumbnailUrl;
-        
+        if (channelName) video.channelName = channelName;
+
         const updatedVideo = await video.save();
-        
         res.status(200).json({ status: true, message: "Video updated successfully", data: updatedVideo });
     } catch (error) {
-        console.error("Error editing video:", error);
+        console.error("Error editing/updating video:", error);
         next(error);
     }
 }
+
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from './AuthContext';
+import VideoUploadModal from './VideoUploadModal';
 
 const ChannelVideosManagement = () => {
   const { channelId } = useParams();
@@ -12,6 +13,7 @@ const ChannelVideosManagement = () => {
   const [selectedVideos, setSelectedVideos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user} = useContext(AuthContext);
   const navigate = useNavigate();
   
@@ -103,7 +105,7 @@ const ChannelVideosManagement = () => {
           }
         }
         
-        // Remove successfully deleted videos from state
+        // Remove deleted videos from state
         setVideos(videos.filter(video => !deletedIds.includes(video._id)));
         
         // Update selected videos
@@ -134,7 +136,7 @@ const ChannelVideosManagement = () => {
           return;
         }
   
-        // Make sure we're sending the token correctly
+       
         await axios.delete(`/video/${videoId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -151,7 +153,7 @@ const ChannelVideosManagement = () => {
           setError("You don't have permission to delete this video. It may belong to another channel owner.");
         } else if (err.response?.status === 401) {
           setError("Your session has expired. Please log in again.");
-          // You might want to redirect to login
+          
         } else {
           setError(err.response?.data?.message || "Failed to delete video. Please try again.");
         }
@@ -393,18 +395,29 @@ const ChannelVideosManagement = () => {
       
       <div className="mt-6 flex justify-between items-center">
         <Link 
-          to={`/channel/${channelId}`} 
+          to={`/channel/${channelId}/${user._id}`}
           className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300"
         >
           Back to Channel
         </Link>
         
-        <Link 
-          to={`/upload/${channelId}`} 
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Upload New Video
-        </Link>
+
+              
+              {/* Show upload button if current user is channel owner */}
+              {user && channel.owner === user._id && (
+                <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                Upload a Video
+                </button>
+              )}
+              <VideoUploadModal 
+              isOpen={isModalOpen} 
+              onClose={() => setIsModalOpen(false)} 
+              channelId={channelId} 
+              />
+           
       </div>
     </div>
   );

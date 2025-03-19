@@ -46,14 +46,13 @@ const imageUpload = multer({
 });
 
 //  upload middleware for videos
-const videoUpload = multer({
+export const videoAndThumbnailUpload = multer({
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
-  fileFilter: videoFileFilter,
-}).single("videoFile");
-
-// Export middleware directly
-export const uploadVideo = videoUpload;
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB for video
+}).fields([
+  { name: "videoFile", maxCount: 1 },
+  { name: "thumbnailFile", maxCount: 1 }
+]);
 
 // Export middleware for different route needs
 export const channelUpload = imageUpload.fields([

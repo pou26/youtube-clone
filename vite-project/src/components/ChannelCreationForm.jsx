@@ -5,7 +5,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
   const [formData, setFormData] = useState({
     channelName: '',
     description: 'My channel description', // Default description
-    handle: '', // Added handle field
+    handle: '', 
   });
   const [channelThumbnail, setChannelThumbnail] = useState(null);
   const [channelBanner, setChannelBanner] = useState(null);
@@ -22,7 +22,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Store the actual file for submission
+    // Storing actual file for submission
     setChannelThumbnail(file);
     
     // Create preview
@@ -45,7 +45,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
     setError('');
     
     try {
-      // Create multipart form data
+      // multipart form data
       const formDataToSubmit = new FormData();
       formDataToSubmit.append('channelName', formData.channelName);
       formDataToSubmit.append('description', formData.description);
@@ -55,7 +55,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
         formDataToSubmit.append('handle', formData.handle);
       }
       
-      // Add the actual files, not the data URLs
+      // actual files,(form-data) not the data URLs
       if (channelThumbnail) {
         formDataToSubmit.append('channelThumbnail', channelThumbnail);
       }
@@ -64,10 +64,10 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
         formDataToSubmit.append('channelBanner', channelBanner);
       }
       
-// Set a base URL for axios
+// base URL for axios
 axios.defaults.baseURL = 'http://localhost:4000';
 
-// Then in your component:
+
 const response = await axios.post(
   `/channels/${userId}`, 
   formDataToSubmit,
@@ -79,7 +79,7 @@ const response = await axios.post(
 );
       
       if (response.data.status) {
-        // Return the channel data to update user context
+        // Return channel data to update user context
         
         if (onSuccess) onSuccess(response.data.data);
       } else {

@@ -10,7 +10,7 @@ export async function upsertComment(req, res, next) {
 
         const { text, commentId } = req.body;
         const { videoId } = req.params;
-        const userId = req.user._id; // Get from authenticated user
+        const userId = req.user.userId; // Get from authenticated user
 
         if (!text || !videoId || !userId) {
             return res.status(400).json({ status: false, message: "All fields (userId, videoId, text) are required!" });
@@ -71,7 +71,7 @@ export async function updateComment(req, res, next) {
     try {
         const { videoId, commentId } = req.params;
         const { text } = req.body;
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
         if (!videoId || !commentId || !text || !userId) {
             return res.status(400).json({
@@ -123,7 +123,7 @@ export async function updateComment(req, res, next) {
 export async function deleteComment(req, res, next) {
     try {
         const { videoId, commentId } = req.params;
-        const userId = req.user._id;
+        const userId = req.user.userId;
 
         if (!videoId || !commentId || !userId) {
             return res.status(400).json({

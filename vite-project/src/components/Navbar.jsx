@@ -76,7 +76,7 @@ const Navbar = ({ toggleSidebar }) => {
           </button>
           
           <Link to="/" className="flex items-center ml-1 md:ml-4">
-            <img src="youtube.png" alt="logo" className="h-5 md:h-6" />
+            <img src="./youtube.png" alt="logo" className="h-5 md:h-6" />
             <span className="ml-1 font-semibold text-lg md:text-xl">YouTube</span>
             <sup className="text-xs ml-1 hidden sm:inline">IN</sup>
           </Link>
@@ -84,13 +84,12 @@ const Navbar = ({ toggleSidebar }) => {
         
         {/* Middle section -small margins for mobile */}
         <div className="flex-grow mx-1 sm:mx-4 md:mx-10 max-w-2xl">
-          <Search 
-            value={searchQuery}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            className="custom-class"
-            placeholder="Search videos"
-          />
+        <Search 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery}
+        placeholder="Search"
+        className=""
+      />
         </div>
         
         {/* Right section - smaller space between items on mobile */}
