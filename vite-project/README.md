@@ -97,6 +97,7 @@ Note About Default Content
 The application doesn't come with default videos or channels
 You must create a channel and upload videos to see the full functionality
 Alternatively, you can manually add a ChannelId to video data in MongoDB to associate videos with channels
+After each creation or modification you need to refresh
 You can login with google as well
 
 

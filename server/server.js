@@ -41,7 +41,7 @@ routes(app);
 app.use(errorHandler);
 
 // Database Connection
-mongoose.connect("mongodb://localhost:27017/youtube", {
+mongoose.connect("mongodb+srv://poushaliaich1999:ghqFg71pOYEIneCm@cluster0.tvd0t.mongodb.net/youtube?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
