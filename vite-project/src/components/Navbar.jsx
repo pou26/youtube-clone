@@ -113,11 +113,12 @@ const Navbar = ({ toggleSidebar }) => {
                 className="h-7 w-7 md:h-8 md:w-8 rounded-full overflow-hidden flex items-center justify-center bg-purple-600 text-white cursor-pointer"
                 onClick={() => setShowUserMenu(!showUserMenu)}
               >
-                {user.avatarUrl ? (
+                {/* {user.avatarUrl ? (
                   <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
                 ) : (
                   <span className="text-sm md:text-lg font-medium">{user.name.charAt(0)}</span>
-                )}
+                )} */}
+                <span className="text-sm md:text-lg font-medium">{user.name.charAt(0)}</span>
               </div>
               
               {showUserMenu && (
@@ -127,12 +128,14 @@ const Navbar = ({ toggleSidebar }) => {
                     <div className="flex items-start space-x-3 md:space-x-4">
                       {/* Avatar */}
                       <div className="h-8 w-8 md:h-10 md:w-10 rounded-full overflow-hidden flex items-center justify-center bg-purple-600 text-white flex-shrink-0">
-                        {user.avatarUrl ? (
+                        {/* {user.avatarUrl ? (
                           <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
                         ) : (
                           <span className="text-sm md:text-lg font-medium">{user.name.charAt(0)}</span>
-                        )}
+                        )} */}
+                        <span className="text-sm md:text-lg font-medium">{user.name.charAt(0)}</span>
                       </div>
+                      
                       
                       {/* User details */}
                       <div className="flex-1">

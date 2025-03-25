@@ -127,8 +127,11 @@ authRouter.get('/auth/google/callback',
       const user = req.user;
       
       // Generate JWT token
-      const accessToken = generateToken(user);
-      
+      const accessToken = jwt.sign(
+                  { userId: user._id.toString(), email: user.email },
+                  "secretKey",
+                  { expiresIn: "24h" }
+              );
       // Create a user object
       const userData = {
         _id: user._id,

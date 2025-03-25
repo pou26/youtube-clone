@@ -271,15 +271,24 @@ const ChannelVideosManagement = () => {
       
       <div className="overflow-x-auto">
         {filteredVideos.length === 0 ? (
-          <div className="text-center py-10 bg-gray-50 rounded-md">
-            <p className="text-gray-500 mb-4">No videos found</p>
-            <Link
-              to={`/upload/${channelId}`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Upload a Video
-            </Link>
-          </div>
+                      <div className="text-center py-10 bg-gray-50 rounded-md">
+                      <p className="text-gray-500 mb-4">No videos found</p>
+                      
+                      {/* Show upload button if current user is channel owner */}
+                      {user && channel.owner === user._id && (
+                        <button 
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                        Upload a Video
+                        </button>
+                      )}
+                      <VideoUploadModal 
+                      isOpen={isModalOpen} 
+                      onClose={() => setIsModalOpen(false)} 
+                      channelId={channelId} 
+                      />
+                    </div>
         ) : (
           <table className="min-w-full bg-white border border-gray-200 rounded-md">
             <thead className="bg-gray-50">
