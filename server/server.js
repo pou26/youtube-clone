@@ -1,3 +1,4 @@
+
 import express from "express";
 import mongoose from "mongoose";
 import { routes } from "./Routes/routes.mjs";
@@ -6,7 +7,14 @@ import { errorHandler } from "./Middleware/errorHandler.js";
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import authRouter from "./Middleware/googleauth.js";  
+import authRouter from "./Middleware/googleauth.js";
+import dotenv from "dotenv";
+dotenv.config();
+
+
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const MONGODB_URL=process.env.MONGODB_URI
+
 
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -14,9 +22,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.use(cors());
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // Your frontend URL
+    origin: FRONTEND_URL, // Your frontend URL
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -41,7 +50,7 @@ routes(app);
 app.use(errorHandler);
 
 // Database Connection
-mongoose.connect("mongodb+srv://poushaliaich1999:ghqFg71pOYEIneCm@cluster0.tvd0t.mongodb.net/youtube?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect(MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

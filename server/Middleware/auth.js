@@ -1,10 +1,18 @@
 import userModel from "../Model/user.model.mjs";
 import { isValidObjectId } from "./validate.mjs";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 
 // Constants from environment variables
-const JWT_SECRET = "secretKey";
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const BACKEND_URL = process.env.BACKEND_URL;
 
 export function authenticatedUser(req, res, next) {
   try {

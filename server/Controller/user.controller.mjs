@@ -2,6 +2,11 @@ import userModel from "../Model/user.model.mjs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {isValidPassword, isValidName, isValidRequestBody} from "../Middleware/validate.mjs";
+import dotenv from "dotenv";
+dotenv.config();
+
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Create/Register a User
 export async function upsertUser(req, res, next) {
@@ -94,7 +99,7 @@ export async function loginUser(req, res, next) {
         // Generate JWT token
         const accessToken = jwt.sign(
             { userId: user._id.toString(), email: user.email },
-            "secretKey",
+            process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
         

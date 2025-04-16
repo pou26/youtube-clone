@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useOutletContext } from "react-router-dom";    //useOutletContext hook retrieves the Outlet context
 import axios from "axios";
 import CategoryFilter from "./CategoryFilter";
+const BACKEND_URL= import.meta.env.VITE_BACKEND_URL;
 
 // axios instance with error handling
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL:  BACKEND_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
