@@ -1,13 +1,13 @@
 
 import express from "express";
 import mongoose from "mongoose";
-import { routes } from "./Routes/routes.mjs";
-import { requestLogger } from "./Middleware/logger.js";
-import { errorHandler } from "./Middleware/errorHandler.js";
+import { routes } from "../Routes/routes.mjs";
+import { requestLogger } from "../Middleware/logger.js";
+import { errorHandler } from "../Middleware/errorHandler.js";
 import cors from "cors";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import authRouter from "./Middleware/googleauth.js";
+import authRouter from "../Middleware/googleauth.js";
 import dotenv from "dotenv";
 dotenv.config();
 
