@@ -1,4 +1,4 @@
-// components/AuthRequiredRoute.jsx
+//This component ensures that only authenticated users can access certain(channel page) pages. If the user is not logged in, they are redirected to the home ("/") page.
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
@@ -19,7 +19,7 @@ const AuthRequiredRoute = ({ children }) => {
     return <Navigate to="/" replace />;
   }
   
-  return children;
+  return children;    //If user exists, it renders whatever child components were wrapped inside <AuthRequiredRoute>.
 };
 
 export default AuthRequiredRoute;

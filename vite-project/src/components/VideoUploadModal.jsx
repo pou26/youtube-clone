@@ -25,9 +25,10 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
   ];
 
   // Clean up object URLs on unmount
+  //URL.revokeObjectURL() is a method in JS,releases the memory used by an object URL that was previously created using URL.createObjectURL().
   useEffect(() => {
     return () => {
-      if (videoPreview) URL.revokeObjectURL(videoPreview);
+      if (videoPreview) URL.revokeObjectURL(videoPreview);    //free up memory and prevent memory leaks.
       if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
     };
   }, [videoPreview, thumbnailPreview]);
@@ -79,7 +80,7 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
     try {
       //FormData with all content
       const formData = new FormData();
-      formData.append('videoFile', videoFile);
+      formData.append('videoFile', videoFile);    //.append used for sending multipart/form-data requests
       formData.append('title', title);
       formData.append('description', description);
       formData.append('category', category);
@@ -95,9 +96,10 @@ const VideoUploadModal = ({ isOpen, onClose, channelId, onSuccess }) => {
         `/video/${channelId}`,
         formData, 
         {
-          onUploadProgress: (progressEvent) => {
+          onUploadProgress: (progressEvent) => {    //onUploadProgress function in Axios tracks how much of the file has been uploaded.
+                                                    
             const progress = Math.round(
-              (progressEvent.loaded * 90) / progressEvent.total
+              (progressEvent.loaded * 90) / progressEvent.total //progressEvent.loaded → Amount of data uploaded so far,progressEvent.total → Total file size.
             );
             setUploadProgress(10 + progress); // Start from 10% 
           },

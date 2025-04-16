@@ -13,7 +13,7 @@ const getImageUrl = (url) => {
     new URL(url);
     return url;
   } catch (e) {
-    const baseUrl = window.location.origin;
+    const baseUrl = window.location.origin;   //(protocol + domain + port,http://localhost:4000)
     return `${baseUrl}/${url.startsWith('/') ? url.substring(1) : url}`;
   }
 };
@@ -182,20 +182,20 @@ const ChannelPage = () => {
     }
     
     try {
-      const type = isSubscribed ? 'unsubscribe' : 'subscribe';
+      const type = isSubscribed ? 'unsubscribe' : 'subscribe';    //if isSubscribed is true it'll send /subscriptions/unsubscribe vice versa
       
       await axios.post(`/subscriptions/${type}`, {
         userId: user._id,
         channelId: channelId
       });
       
-      setIsSubscribed(!isSubscribed);
+      setIsSubscribed(!isSubscribed);   //Toggles the isSubscribed state
       if (channel) {
         // Update subscriber count
         setChannel({
-          ...channel,
-          subscribers: channel.subscribers + (isSubscribed ? -1 : 1),
-          userSubscribed: !isSubscribed
+          ...channel,     //to keep existing properties.
+          subscribers: channel.subscribers + (isSubscribed ? -1 : 1),   //user clicks to unsubscribe.(isSubscribed === true), decrease subscribers by -1.vice versa
+          userSubscribed: !isSubscribed   //If isSubscribed is true → !isSubscribed becomes false (user unsubscribing).
         });
       }
     } catch (error) {

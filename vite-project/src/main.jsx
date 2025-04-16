@@ -22,7 +22,8 @@ const VideoEditForm=lazy(() => import("./components/VideoEditForm"));
 const LoginForm=lazy(() => import("./components/LoginForm"));
 
 
-const appRouter = createBrowserRouter([
+const appRouter = createBrowserRouter([   //creates a router instance that manages navigation between different routes.
+
   {
     path: "/",
     element: <App />,

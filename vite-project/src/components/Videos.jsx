@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";    //useOutletContext hook retrieves the Outlet context
 import axios from "axios";
 import CategoryFilter from "./CategoryFilter";
 
@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
 });
 
 // request interceptor for debugging
-axiosInstance.interceptors.request.use(config => {
+axiosInstance.interceptors.request.use(config => {    // middleware function,to modify request before handled by axios,config object contains request details
   console.log('Making request to:', config.url);
   return config;
 });
@@ -28,11 +28,11 @@ axiosInstance.interceptors.response.use(
 );
 
 const Videos = ({
-  layoutType = "grid",
+  layoutType = "grid",  //this is for UI,in homepage it'll come as a grid in videodetails page comes as a list
   context = "homepage"
 }) => {
   // Get sidebar state from outlet context
-  const { isSidebar2Open, isVideoDetailsPage } = useOutletContext() || { isSidebar2Open: false, isVideoDetailsPage: false };
+  const { isSidebar2Open, isVideoDetailsPage } = useOutletContext() || { isSidebar2Open: false, isVideoDetailsPage: false }; 
   const { searchQuery } = useOutletContext();
   const [videos, setVideos] = useState([]);
   const [filteredVideos, setFilteredVideos] = useState([]);
@@ -40,7 +40,8 @@ const Videos = ({
   const [error, setError] = useState(null);
   const [hoveredVideo, setHoveredVideo] = useState(null);
   const [activeFilter, setActiveFilter] = useState("All");
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef(null);    //At the time of component mount, there is no active setTimeout, initialized it with null
+                                      //using useRef to avoid re-renders
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -72,7 +73,7 @@ const Videos = ({
         }));
 
         setVideos(formattedVideos);
-        setFilteredVideos(formattedVideos);
+        setFilteredVideos(formattedVideos); //When a user searches for videos, setFilteredVideos updates while videos remains unchanged.
       } catch (err) {
         console.error("Error fetching videos:", err);
         
@@ -114,7 +115,7 @@ const Videos = ({
       const filtered = videos.filter(video => video.category === activeFilter);
       setFilteredVideos(filtered);
     }
-  }, [activeFilter, videos]);
+  }, [activeFilter, videos]);   //activeFilter changes (while select a different category).videos changes (new videos are fetched).
 
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -144,7 +145,7 @@ const Videos = ({
   const handleMouseEnter = (videoId) => {
     // Only enable hover preview for homepage context
     if (context === 'homepage') {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);   // timer ID stored inside a useRef object,manage the timeout function to play hovered video after a delay.
       timeoutRef.current = setTimeout(() => {
         setHoveredVideo(videoId);
       }, 800);

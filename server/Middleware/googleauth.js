@@ -3,7 +3,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import jwt from "jsonwebtoken";
 import session from "express-session";
-import express from "express";
+import express from "express";    // maintain session state across requests.
 // import dotenv from "dotenv";
 import userModel from "../Model/user.model.mjs";
 
@@ -24,25 +24,27 @@ authRouter.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === 'production', 
-    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', //only allows cookies over HTTPS in production.
+    httpOnly: true,  //makes cookies inaccessible from JS (for security).
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
-// Initialize Passport
+// Initialize Passport(Middleware for authentication)
 authRouter.use(passport.initialize());
-authRouter.use(passport.session());
+authRouter.use(passport.session());  //Enables persistent login sessions.
 
-// Google OAuth Strategy
+// Google OAuth Strategy Configures Google OAuth.
 passport.use(
   new GoogleStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: `${BACKEND_URL}/auth/google/callback`,
+      callbackURL: `${BACKEND_URL}/auth/google/callback`,  //Redirects to Google for login, then returns them to /auth/google/callback.
       scope: ["profile", "email"],
     },
+
+    //After Google login, this callback runs.
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Find existing user or create a new one
@@ -50,8 +52,7 @@ passport.use(
 
         if (!user) {
           // Create new user
-          const username = profile.displayName.replace(/\s+/g, "").toLowerCase() + 
-                           Math.floor(Math.random() * 1000);
+          const username = profile.displayName.replace(/\s+/g, "").toLowerCase() + Math.floor(Math.random() * 1000);  //from the user's Google profile name removes whitespace and create random name
           
           user = new userModel({
             userName: username,
@@ -86,10 +87,13 @@ passport.use(
 );
 
 // User serialization/deserialization for session management
+//Stores the user ID in session.
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
 
+
+//Retrieves full user from DB using the ID saved in the session.
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await userModel.findById(id);

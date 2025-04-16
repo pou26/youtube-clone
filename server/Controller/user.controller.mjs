@@ -114,7 +114,7 @@ export async function getCurrentUser(req, res, next) {
     try {
       const userId = req.user.userId; // authenticatedUser middleware
       
-      const user = await userModel.findById(userId).select('-password');
+      const user = await userModel.findById(userId).select('-password'); //without password,.select used for which keys we want to show
       
       if (!user) {
         return res.status(404).json({ status: false, message: "User not found" });

@@ -4,24 +4,27 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:4000';
 axios.defaults.baseURL = API_BASE_URL;
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext(null);   //creates an authentication context.used to share authentication data globally.
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('accessToken'));
+export const AuthProvider = ({ children }) => {     //wraps entire application to provide authentication state to child components.
+
+  const [user, setUser] = useState(null);   //null if not logged in
+  const [token, setToken] = useState(localStorage.getItem('accessToken'));  //gets the stored auth token from localStorage.
   const [loading, setLoading] = useState(true);
+
+  //Load User Data on Mount
 
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const savedToken = localStorage.getItem('accessToken');
+        const savedToken = localStorage.getItem('accessToken'); //retrieves latest value from localStorage,otherwise usestate accesstoken is enough
         const savedUser = localStorage.getItem('user');
        
         if (savedToken && savedUser) {
           const parsedUser = JSON.parse(savedUser);
           setUser(parsedUser);
-          setToken(savedToken);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+          setToken(savedToken);   //if the token in localStorage has changed since initialization we need this,otherwise it'll cause re-render
+          axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;    //Adds Auth header to Axios for future requests.
         }
       } catch (error) {
         console.error('Error restoring authentication state:', error);
@@ -31,24 +34,23 @@ export const AuthProvider = ({ children }) => {
     };
    
     loadUser();
-  }, [token]);
-
+  }, [token]);  //token dependency can be removed,it'll trigger a re-render due to useState
 
   useEffect(() => {
-    const handleOAuthRedirect = () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tokenFromUrl = urlParams.get('token');
+    const handleOAuthRedirect = () => {   //extracts auth data (token & user data) from the URL query parameters.
+      const urlParams = new URLSearchParams(window.location.search); //converts extracted query parameters from the URL to an object
+      const tokenFromUrl = urlParams.get('token');  //we can get the token after converting into an object
       const userDataParam = urlParams.get('userData');
       
       if (tokenFromUrl) {
         // Store the token
         localStorage.setItem('accessToken', tokenFromUrl);
-        setToken(tokenFromUrl);
+        setToken(tokenFromUrl);   //Update state (token),immediately reflects the login status.
         
         // Parse and store user data if available
         if (userDataParam) {
           try {
-            const userData = JSON.parse(decodeURIComponent(userDataParam));
+            const userData = JSON.parse(decodeURIComponent(userDataParam));   // Converts userDataParam to JSON string,then into a JS object.
             localStorage.setItem('user', JSON.stringify(userData));
             setUser(userData);
           } catch (error) {
@@ -62,11 +64,13 @@ export const AuthProvider = ({ children }) => {
         }
         
         // Clean up URL after extracting parameters
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState({}, document.title, window.location.pathname);    //removes the token from the URL after storing.
       }
     };
+
+    //If user data is not provided in the URL,fetch from backend API.
     
-    const fetchUserData = async (authToken) => {
+    const fetchUserData = async (authToken) => {  
       try {
         const response = await axios.get('/user/me', {
           headers: { 'Authorization': `Bearer ${authToken}` }
@@ -100,7 +104,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
         setUser(user);
         setToken(accessToken);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;   //global configuration object in Axios.Auth will apply to all requests made using Axios.
         return { success: true };
       }
       return { success: false, message: 'Login failed' };
@@ -137,7 +141,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUserData = (userData) => {
     if (!userData) return;
-    const updatedUser = { ...user, ...userData };
+    const updatedUser = { ...user, ...userData };   //keep old user objects while updates userData object
     localStorage.setItem('user', JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
@@ -155,7 +159,7 @@ export const AuthProvider = ({ children }) => {
       setUser,
       setToken,
       loginWithGoogle,
-      isAuthenticated: !!token
+      isAuthenticated: !!token    //isAuthenticated: token ? true : false
       
     }}>
       {children}

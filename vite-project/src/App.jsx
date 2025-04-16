@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
-import SideBar from "./components/SideBar";
-import Videos from "./components/Videos";
+import SideBar from './components/temp';
+// import Videos from "./components/Videos";
 import { Outlet, useLocation } from "react-router-dom";
 import { useSearch } from './components/SearchContext';
 import "./App.css";
@@ -12,15 +12,16 @@ const App = () => {
   const { searchQuery } = useSearch(); 
   const location = useLocation();
   
-  // Check if we're on the video details page
+  // Check if it is the video details page,current page's URL contains "/video/"
   const isVideoDetailsPage = location.pathname.includes('/video/');
   
-  const toggleSidebar = () => setIsSidebar2Open((prev) => !prev);
+  const toggleSidebar = () => setIsSidebar2Open((prev) => !prev);   //prev is current state,!prev flips the value (true → false or false → true).
   
   return (
 <div className="app-container">
   {/* Navbar with sidebar toggle functionality */}
-  <Navbar toggleSidebar={toggleSidebar} />
+  <Navbar toggleSidebar={toggleSidebar} />      {/* receives toggleSidebar as a prop. */}
+
   
   {/* Sidebar components */}
   <SideBar
@@ -32,12 +33,16 @@ const App = () => {
   {/* Content wrapper with responsive spacing using custom classes */}
   <div
     className={`content-wrapper transition-all duration-300 ease-in-out ${
-      isSidebar2Open && !isVideoDetailsPage 
+      isSidebar2Open && !isVideoDetailsPage          
         ? 'sidebar-open' 
         : 'sidebar-closed mt-[70px]'
     }`}
   >
-    <Outlet context={{ isSidebar2Open, isVideoDetailsPage,searchQuery }} />
+{/* prevents the homepage sidebar-open styling. */}
+
+
+    <Outlet context={{ isSidebar2Open, isVideoDetailsPage,searchQuery }} />    {/* pass data to all child components rendered by Outlet,prop drilling not needed*/}
+   
   </div>
 </div>
   );

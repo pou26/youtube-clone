@@ -22,9 +22,9 @@ export async function upsertComment(req, res, next) {
         }
 
         const comments = video.get("comments") || [];
-        console.log(JSON.stringify(comments));
+        // console.log(JSON.stringify(comments));
         let id = "";
-        // Create a new comment with an explicit _id
+        // Create a new comment with an  _id
         if (!commentId) {
             const newComment = {
                 _id: new mongoose.Types.ObjectId(),
@@ -48,7 +48,6 @@ export async function upsertComment(req, res, next) {
             // Update the comment text
             comments[commentIndex].text = text;
         }
-        console.log("AGAIN: " + JSON.stringify(comments));
 
         video.set("comments", comments);
         await video.save();
@@ -80,7 +79,7 @@ export async function updateComment(req, res, next) {
             });
         }
 
-        // 🔹 Find the video document
+        // Find the video document
         const video = await Video.findById(videoId);
         if (!video) {
             return res.status(404).json({ status: false, message: "Video not found." });
@@ -89,7 +88,7 @@ export async function updateComment(req, res, next) {
         const comments = video.comments || [];
 
         const commentIndex = comments.findIndex(comment => {
-            // ✅ Check if _id and userId exist before calling toString()
+            // Check if _id and userId exist before calling toString()
             if (!comment?._id || !comment?.userId) return false;
             return comment._id.toString() === commentId && comment.userId.toString() === userId;
         });
@@ -101,14 +100,13 @@ export async function updateComment(req, res, next) {
             });
         }
 
-        // ✅ Update the comment text
+        // Update the comment text
         comments[commentIndex].text = text;
 
-        // 🔹 Ensure changes are reflected in MongoDB
+        // Ensure changes are reflected in MongoDB
         video.comments = comments;  // Reassign the updated comments array
-        await video.markModified("comments");  // Explicitly mark 'comments' as modified
-        await video.save();  // 🔥 Save changes to MongoDB
-
+        await video.markModified("comments");  //  mark 'comments' as modified
+        await video.save();  
         return res.status(200).json({
             status: true,
             message: "Comment updated successfully!",
@@ -118,7 +116,6 @@ export async function updateComment(req, res, next) {
         next(error);
     }
 }
-
 // Delete comment
 export async function deleteComment(req, res, next) {
     try {
@@ -167,8 +164,6 @@ export async function deleteComment(req, res, next) {
         next(error);
     }
 }
-
-
 // Get comments by videoId
 export const getCommentsByVideoId = async (req, res, next) => {
     try {
@@ -184,5 +179,3 @@ export const getCommentsByVideoId = async (req, res, next) => {
         next(error);
     }
 };
-
-

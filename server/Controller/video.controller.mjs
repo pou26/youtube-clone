@@ -7,7 +7,7 @@ import metaModel from "../Model/meta.model.mjs";
 
 export async function getVideo(req, res, next) {
     try {
-        const videos = await Video.find().lean();
+        const videos = await Video.find().lean(); //._doc-> video deatils body inside mongoose wrapper
         
         if (videos.length === 0) {
             return res.status(404).json({ msg: "No videos found" });
@@ -55,7 +55,7 @@ export async function getVideo(req, res, next) {
 export async function upsertVideo(req, res, next) {
     try {
         // Check if a file was uploaded
-        console.log(JSON.stringify(req.files));
+        // console.log(JSON.stringify(req.files));
         const videoFile = req.files.videoFile[0];
         if (!videoFile) {
             return res.status(400).json({ status: false, message: "Video file is required!" });
@@ -120,8 +120,8 @@ export async function upsertVideo(req, res, next) {
                     if (oldFilePath) {
                         const fullPath = path.join('uploads', oldFilePath);
                         // Delete the file if it exists
-                        if (fs.existsSync(fullPath)) {
-                            fs.unlinkSync(fullPath);
+                        if (fs.existsSync(fullPath)) {  //check if the file actually exists in that path 
+                            fs.unlinkSync(fullPath);  // delete it synchronously
                         }
                     }
                 } catch (error) {
@@ -282,7 +282,7 @@ export async function deleteVideo(req, res, next) {
         // Delete the video file
         if (video.videoUrl) {
             try {
-                const videoPath = video.videoUrl.split('/uploads/')[1];
+                const videoPath = video.videoUrl.split('/uploads/')[1]; //relative path
                 if (videoPath) {
                     const fullPath = path.join('uploads', videoPath);
                     if (fs.existsSync(fullPath)) {

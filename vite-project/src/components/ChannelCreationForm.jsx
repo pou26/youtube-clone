@@ -26,11 +26,11 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
     setChannelThumbnail(file);
     
     // Create preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewImage(reader.result);
+    const reader = new FileReader();  //built-in JavaScript API allows reading file content asynchronously.
+    reader.onload = () => {             //after file is read, the onload event triggers.
+      setPreviewImage(reader.result);   //reader.result contains a Base64 Data URL of image, which is a format suitable for displaying in an <img> tag.
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file);   //tells the FileReader to convert the selected image file into a Data URL.after conversion is done, the onload function executes.
   };
 
   const handleBannerUpload = (e) => {
@@ -103,7 +103,8 @@ const response = await axios.post(
             style={{ position: 'relative' }}
           >
             {previewImage ? (
-              <img src={previewImage} alt="Profile" className="w-full h-full object-cover" />
+              <img src={previewImage} alt="Profile" className="w-full h-full object-cover" />   // updates UI by displaying the preview image using the previewImage state.
+              
             ) : (
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                 <div className="w-10 h-6 bg-blue-300 rounded-full mt-2"></div>

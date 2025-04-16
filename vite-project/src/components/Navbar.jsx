@@ -8,16 +8,16 @@ import { useSearch } from './SearchContext';
 import LoginModal from './LoginModal';
 
 const Navbar = ({ toggleSidebar }) => {
-  const { searchQuery, setSearchQuery } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearch();  // Access global search state
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showChannelForm, setShowChannelForm] = useState(false);
   const { user, logout, updateUserData } = useContext(AuthContext);
-  const userMenuRef = useRef(null);
+  const userMenuRef = useRef(null);   //using useref to avoid re-rendering when closing the menu,null ensures that the reference exists before the DOM is rendered
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
+    
     setSearchQuery(e.target.value);
   };
 
@@ -32,14 +32,14 @@ const Navbar = ({ toggleSidebar }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {   //checking if the ref is assigned before using it.
         setShowUserMenu(false);
       }
     };
     
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);   //whenever a user clicks outside,function handleClickOutside will execute.
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);    //cleanup function,calls this when the component unmounts
     };
   }, []);
 
@@ -86,7 +86,7 @@ const Navbar = ({ toggleSidebar }) => {
         <div className="flex-grow mx-1 sm:mx-4 md:mx-10 max-w-2xl">
         <Search 
         searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        setSearchQuery={setSearchQuery}    // Updates search query globally
         placeholder="Search"
         className=""
       />
@@ -108,7 +108,8 @@ const Navbar = ({ toggleSidebar }) => {
           </div>
           
           {user ? (
-            <div className="relative" ref={userMenuRef}>
+            <div className="relative" ref={userMenuRef}> {/* After rendering,ref is assigned here. */}
+            
               <div 
                 className="h-7 w-7 md:h-8 md:w-8 rounded-full overflow-hidden flex items-center justify-center bg-purple-600 text-white cursor-pointer"
                 onClick={() => setShowUserMenu(!showUserMenu)}

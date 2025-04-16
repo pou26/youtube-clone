@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const UserMenu = ({ user, onLogout, onCreateChannel }) => {
+const UserMenu = ({ user, onLogout, onCreateChannel }) => {   //get userdetails,logout details,channel creation function
   const [showChannelList, setShowChannelList] = useState(false);
   const navigate = useNavigate();
 
   const handleViewChannel = (channelId) => {
     navigate(`/channel/${channelId}`);
-    setShowChannelList(false);
+    setShowChannelList(false);    //close dropdown
   };
 
   return (
@@ -30,7 +30,7 @@ const UserMenu = ({ user, onLogout, onCreateChannel }) => {
           {user.channels && user.channels.length > 0 && (
             <div className="relative">
               <button 
-                onClick={() => setShowChannelList(!showChannelList)}
+                onClick={() => setShowChannelList(!showChannelList)}    //toggles between channel list hide/view
                 className="text-xs md:text-sm text-blue-600 hover:underline flex items-center"
               >
                 View your channels

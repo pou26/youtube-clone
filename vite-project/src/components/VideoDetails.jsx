@@ -185,7 +185,7 @@ const handleCommentSubmit = async (e) => {
         comment._id === editingComment ? 
           { ...comment, text: commentText, edited: true } : 
           comment
-      ));
+      ));                                                 //modify only text and edited properties,keeping the rest unchanged using ...spread.
       
       // Clear edit state
       setEditingComment(null);
@@ -196,8 +196,9 @@ const handleCommentSubmit = async (e) => {
       });
       
       // Add new comment to comments list
-      setComments([response.data.data, ...comments]);
-      setCommentCount(prev => prev + 1);
+      setComments([response.data.data, ...comments]);   //contains the newly created comment.[...comments] helps new comments appear at the top.
+
+      setCommentCount(prev => prev + 1);    //increase comment count
     }
     
     // Clear input
@@ -209,7 +210,7 @@ const handleCommentSubmit = async (e) => {
       "Failed to post comment. Please try again."
     );
   } finally {
-    setCommentLoading(false);
+    setCommentLoading(false);   //UI removes the loading state.
   }
 };
   // Handle editing a comment
