@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
-import SideBar from './components/temp';
+import SideBar from './components/SideBartemp';
 // import Videos from "./components/Videos";
 import { Outlet, useLocation } from "react-router-dom";
 import { useSearch } from './components/SearchContext';
