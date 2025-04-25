@@ -12,7 +12,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
-const BACKEND_URL = process.env.BACKEND_URL;
+const VITE_BACKEND_URL = process.env.VITE_BACKEND_URL;
 
 export function authenticatedUser(req, res, next) {
   try {

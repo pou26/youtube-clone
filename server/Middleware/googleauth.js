@@ -13,8 +13,8 @@ import userModel from "../Model/user.model.mjs";
 const JWT_SECRET = "cLz5IWaG7v0F9U8P1M_GtyfKiUFS" ;
 const GOOGLE_CLIENT_ID = "381776458282-2avqnjvhbf7rmpv0pgb1f6sle1evdh25.apps.googleusercontent.com";
 const GOOGLE_CLIENT_SECRET = "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";
-const FRONTEND_URL =  "http://localhost:5173";
-const BACKEND_URL = "http://localhost:4000";
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const VITE_BACKEND_URL = process.env.VITE_BACKEND_URL;
 
 const authRouter = express.Router();
 
@@ -40,7 +40,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: `${BACKEND_URL}/auth/google/callback`,  //Redirects to Google for login, then returns them to /auth/google/callback.
+      callbackURL: `${VITE_BACKEND_URL}/auth/google/callback`,  //Redirects to Google for login, then returns them to /auth/google/callback.
       scope: ["profile", "email"],
     },
 
