@@ -6,9 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
 /vite-project/node_modules/
+/vite-project/package-lock.json
 /server/node_modules/
+/server/package-lock.json
 dist
 dist-ssr
 *.local
