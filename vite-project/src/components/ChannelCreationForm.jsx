@@ -65,7 +65,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
       }
       
 // base URL for axios
-axios.defaults.baseURL = 'https://youtube-clone-zmmh.onrender.com';
+axios.defaults.baseURL = 'import.meta.env.VITE_BACKEND_URL';
 
 
 const response = await axios.post(

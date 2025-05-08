@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 import './LoginForm.css';
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const LoginPage = ({ isModal = false, onModalClose }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -40,7 +41,7 @@ const LoginPage = ({ isModal = false, onModalClose }) => {
   // Fetch user data with token
   const fetchUserData = async (accessToken) => {
     try {
-      const response = await axios.get('https://youtube-clone-zmmh.onrender.com/user/me', {
+      const response = await axios.get('/user/me', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }

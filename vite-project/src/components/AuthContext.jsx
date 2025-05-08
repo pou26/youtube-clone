@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://youtube-clone-zmmh.onrender.com';
+const API_BASE_URL = 'import.meta.env.VITE_BACKEND_URL';
 axios.defaults.baseURL = API_BASE_URL;
 
 export const AuthContext = createContext(null);   //creates an authentication context.used to share authentication data globally.
