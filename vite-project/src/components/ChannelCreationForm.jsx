@@ -65,7 +65,7 @@ const ChannelCreationForm = ({ userId, onSuccess, onCancel }) => {
       }
       
 // base URL for axios
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = 'https://youtube-clone-zmmh.onrender.com';
 
 
 const response = await axios.post(

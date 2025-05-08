@@ -5,7 +5,7 @@ import { AuthContext } from './AuthContext';
 import ChannelVideosManagement from './ChannelVideosManagement';
 import VideoUploadModal from './VideoUploadModal';
 
-axios.defaults.baseURL = 'http://localhost:4000';
+axios.defaults.baseURL = 'https://youtube-clone-zmmh.onrender.com';
 
 const getImageUrl = (url) => {
   if (!url) return null;

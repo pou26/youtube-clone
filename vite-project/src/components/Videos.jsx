@@ -48,7 +48,6 @@ const Videos = ({
     const fetchVideos = async () => {
       try {
        
-        console.log('Attempting to fetch videos from:', 'http://localhost:4000/videos');
         
         const response = await axiosInstance.get("/videos");
         const data = response.data;
@@ -166,10 +165,7 @@ const Videos = ({
       <div className="mt-4 p-4 bg-white rounded border border-gray-200">
         <h4 className="font-medium mb-2">Troubleshooting:</h4>
         <ul className="list-disc pl-5 space-y-2 text-sm">
-          <li>Check if your backend server is running at <code className="bg-gray-100 px-1">http://localhost:4000</code></li>
           <li>Verify that the <code className="bg-gray-100 px-1">/videos</code> endpoint is correctly implemented</li>
-          <li>Check server logs for additional error information</li>
-          <li>Try refreshing the page</li>
         </ul>
       </div>
     </div>

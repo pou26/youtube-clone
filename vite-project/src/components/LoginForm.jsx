@@ -40,7 +40,7 @@ const LoginPage = ({ isModal = false, onModalClose }) => {
   // Fetch user data with token
   const fetchUserData = async (accessToken) => {
     try {
-      const response = await axios.get('http://localhost:4000/user/me', {
+      const response = await axios.get('https://youtube-clone-zmmh.onrender.com/user/me', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
         }
@@ -138,7 +138,7 @@ const LoginPage = ({ isModal = false, onModalClose }) => {
       loginWithGoogle();
     } else {
       
-      window.location.href = 'http://localhost:4000/auth/google';
+      window.location.href = 'https://youtube-clone-zmmh.onrender.com/auth/google';
     }
   };
 

@@ -15,7 +15,7 @@ export async function upsertChannel(req, res, next) {
       
       if (req.files) {
         //base URL from server config or environment
-        const baseUrl = process.env.API_BASE_URL || 'http://localhost:4000';
+        const baseUrl = process.env.API_BASE_URL;
         
         // if bannerImage exists in the files
         if (req.files.channelBanner && req.files.channelBanner[0]) {
