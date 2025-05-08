@@ -22,10 +22,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 // Middleware
 app.use(cors({
-    origin: FRONTEND_URL, // Your frontend URL
+    origin: [FRONTEND_URL], // Your frontend URL
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
