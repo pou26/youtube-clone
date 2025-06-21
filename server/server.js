@@ -41,7 +41,7 @@ app.use(requestLogger);
 app.use('/', authRouter);
 
 // Serve static files
-app.use(express.static(path.join(__dirname, '../vite-project/dist')));
+// app.use(express.static(path.join(__dirname, '../vite-project/dist')));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

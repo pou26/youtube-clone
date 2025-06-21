@@ -139,7 +139,7 @@ const LoginPage = ({ isModal = false, onModalClose }) => {
       loginWithGoogle();
     } else {
       
-      window.location.href = 'https://youtube-clone-zmmh.onrender.com/auth/google';
+      window.location.href = 'http://localhost:4000/auth/google';
     }
   };
 

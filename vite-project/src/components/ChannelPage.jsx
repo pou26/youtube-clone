@@ -18,6 +18,7 @@ const getImageUrl = (url) => {
   }
 };
 
+
 const VideoCard = ({ video }) => {
   const [imageError, setImageError] = useState(false);
   
