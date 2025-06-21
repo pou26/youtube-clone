@@ -30,6 +30,19 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
   }));
+  const cors = require('cors');
+
+// Update your CORS middleware like this:
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://youtube-clone-gmsa.vercel.app' // 👈 your deployed frontend
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true, // if you're using cookies/auth, otherwise omit
+}));
+
 
 // app.use(cors());
 app.use(express.json({ limit: '10mb' }));
